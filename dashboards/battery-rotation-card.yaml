@@ -1,0 +1,371 @@
+type: vertical-stack
+cards:
+  - type: entities
+    entities:
+      - entity: input_select.dashboard_tab
+        name: 📑 Dashboard Sectie
+  - type: conditional
+    conditions:
+      - entity: input_select.dashboard_tab
+        state: Status
+    card:
+      type: vertical-stack
+      cards:
+        - type: markdown
+          content: >
+            ## 🔋 Marstek Batterij Rotatie
+
+
+            **Actieve Batterij:** {{
+            states('input_text.active_battery_fase')|replace('fase_a', 'Fase A
+            (schuin)')|replace('fase_b', 'Fase B (plat)')|replace('fase_c',
+            'Fase C (geen)') }}
+
+            {% set overflow = states('input_text.overflow_battery_fase') %}
+
+            {% if overflow not in ['', 'unknown', 'unavailable'] %}
+
+            **Overflow:** {{ overflow|replace('fase_a', 'Fase
+            A')|replace('fase_b', 'Fase B')|replace('fase_c', 'Fase C') }} ⚡
+
+            {% endif %}
+
+
+            ### P1 Meter: **{{ states('sensor.p1_meter_power') }}W** | Batterij:
+            **{{ states('sensor.marstek_system_total_grid_power') }}W**
+
+            {% set p1 = states('sensor.p1_meter_power')|float(0) %}
+
+            {% if p1 < -200 %}
+
+            {% set sensor = states.binary_sensor.marstek_solar_excess_zone %}
+
+            → ☀️ Teruglevering | 🕐 **{{ (as_timestamp(now()) -
+            as_timestamp(sensor.last_changed))|int if sensor else '?' }}s** /
+            120s
+
+            {% elif p1 > 200 %}
+
+            {% set sensor = states.binary_sensor.marstek_grid_consumption_zone
+            %}
+
+            → ⚡ Verbruik | 🕐 **{{ (as_timestamp(now()) -
+            as_timestamp(sensor.last_changed))|int if sensor else '?' }}s** /
+            120s
+
+            {% else %}
+
+            → ⚖️ Binnen drempel
+
+            {% endif %}
+
+
+            **Laatste Switch:** {% set last_switch =
+            states('input_datetime.last_battery_switch') %}{{
+            as_timestamp(last_switch) | timestamp_custom('%H:%M', true) if
+            last_switch not in ['unknown', 'unavailable'] else '?' }}
+        - type: conditional
+          conditions:
+            - entity: input_text.overflow_battery_fase
+              state_not: ""
+            - entity: input_text.overflow_battery_fase
+              state_not: unknown
+          card:
+            type: vertical-stack
+            cards:
+              - type: markdown
+                content: >
+                  ### ⚡ Overflow Charging Actief
+
+
+                  **Overflow Batterij:** {{
+                  states('input_text.overflow_battery_fase')|replace('fase_a',
+                  'Fase A (schuin)')|replace('fase_b', 'Fase B
+                  (plat)')|replace('fase_c', 'Fase C (geen)') }}
+
+                  **Laadvermogen:** {{
+                  states('input_number.overflow_power')|int(1500) }}W (slot 9)
+
+
+                  Stopt automatisch na {{
+                  states('input_number.overflow_duration')|int(30) }} minuten of
+                  wanneer PV overschot wegvalt.
+              - type: entities
+                entities:
+                  - entity: timer.overflow_charging_timer
+                    name: Resterende Tijd
+        - type: entities
+          title: Systeem
+          show_header_toggle: false
+          entities:
+            - entity: input_boolean.battery_rotation_enabled
+              name: Batterij Rotatie
+            - entity: input_boolean.overflow_charging_enabled
+              name: Automatic Overflow Charging
+            - entity: input_boolean.auto_start_on_consumption_enabled
+              name: Auto-Start bij Verbruik
+            - entity: input_boolean.night_charging_enabled
+              name: Nachtladen
+            - entity: input_boolean.weekend_charging_enabled
+              name: Weekendladen
+        - type: horizontal-stack
+          cards:
+            - type: vertical-stack
+              cards:
+                - type: gauge
+                  entity: sensor.marstek_venuse_d828_state_of_charge
+                  name: Fase A (schuin)
+                  min: 0
+                  max: 100
+                  severity:
+                    green: 50
+                    yellow: 20
+                    red: 0
+                  needle: true
+                - type: markdown
+                  content: >
+                    {% if states('sensor.marstek_venuse_d828_state_of_charge')
+                    not in ['unavailable', 'unknown'] %}🟢{% else %}🔴{% endif
+                    %} {{ states('sensor.marstek_venuse_d828_operating_mode') |
+                    default('?') }}
+            - type: vertical-stack
+              cards:
+                - type: gauge
+                  entity: sensor.marstek_venuse_3_0_9a7d_state_of_charge
+                  name: Fase B (plat)
+                  min: 0
+                  max: 100
+                  severity:
+                    green: 50
+                    yellow: 20
+                    red: 0
+                  needle: true
+                - type: markdown
+                  content: >
+                    {% if
+                    states('sensor.marstek_venuse_3_0_9a7d_state_of_charge') not
+                    in ['unavailable', 'unknown'] %}🟢{% else %}🔴{% endif %} {{
+                    states('sensor.marstek_venuse_3_0_9a7d_operating_mode') |
+                    default('?') }}
+            - type: vertical-stack
+              cards:
+                - type: gauge
+                  entity: sensor.marstek_venuse_deb8_state_of_charge
+                  name: Fase C (geen)
+                  min: 0
+                  max: 100
+                  severity:
+                    green: 50
+                    yellow: 20
+                    red: 0
+                  needle: true
+                - type: markdown
+                  content: >
+                    {% if states('sensor.marstek_venuse_deb8_state_of_charge')
+                    not in ['unavailable', 'unknown'] %}🟢{% else %}🔴{% endif
+                    %} {{ states('sensor.marstek_venuse_deb8_operating_mode') |
+                    default('?') }}
+        - type: entities
+          title: ⚡ Capaciteit
+          entities:
+            - entity: sensor.marstek_venuse_d828_remaining_capacity
+              name: Fase A (schuin)
+              icon: mdi:battery
+            - entity: sensor.marstek_fase_b_remaining_capacity
+              name: Fase B (plat)
+              icon: mdi:battery
+            - entity: sensor.marstek_venuse_deb8_remaining_capacity
+              name: Fase C (geen)
+              icon: mdi:battery
+            - type: divider
+            - entity: sensor.marstek_total_remaining_capacity
+              name: Totaal Systeem
+              icon: mdi:battery-high
+        - type: entities
+          title: Automatische Selectie
+          entities:
+            - entity: sensor.battery_emptiest
+              name: Leegste Batterij
+              icon: mdi:battery-low
+            - entity: sensor.battery_fullest
+              name: Volste Batterij
+              icon: mdi:battery-high
+        - type: entities
+          title: 🔌 Batterij Power per Fase
+          entities:
+            - entity: sensor.marstek_fase_a_power
+            - entity: sensor.marstek_fase_b_power
+            - entity: sensor.marstek_fase_c_power
+  - type: conditional
+    conditions:
+      - entity: input_select.dashboard_tab
+        state: Nachtladen
+    card:
+      type: vertical-stack
+      cards:
+        - type: entities
+          title: 🌙 Nachtladen
+          entities:
+            - entity: input_number.desired_total_capacity
+              name: Gewenste Capaciteit bij Dagstart
+            - entity: sensor.marstek_capacity_deficit
+              name: Batterij Deficit
+            - entity: sensor.marstek_night_hours
+              name: Nachtmodus Duur
+        - type: entities
+          title: ☀️ PV Voorspelling Morgen
+          entities:
+            - entity: input_number.pv_production_per_sunny_hour
+              name: Productie per Zonuur
+            - entity: sensor.marstek_sunny_hours_tomorrow
+              name: Zonuren Morgen
+            - entity: sensor.marstek_expected_pv_tomorrow
+              name: Verwachte PV Productie
+        - type: entities
+          title: 🔋 Laadplan
+          entities:
+            - entity: sensor.marstek_net_charging_deficit
+              name: Netto Te Laden
+              icon: mdi:battery-charging-outline
+            - entity: sensor.marstek_required_charging_power
+              name: Totaal Laadvermogen (nu)
+              icon: mdi:flash
+            - entity: sensor.marstek_estimated_charging_power
+              name: Geschat Laadvermogen
+              icon: mdi:flash-outline
+            - entity: sensor.marstek_charging_plan
+              name: Laadplan Vannacht
+              icon: mdi:battery-charging-wireless
+        - type: entities
+          title: ⚙️ Nachtladen Instellingen
+          entities:
+            - entity: input_datetime.night_mode_start_time
+              name: Nachtmodus Start
+            - entity: input_datetime.day_mode_start_time
+              name: Dagmodus Start
+  - type: conditional
+    conditions:
+      - entity: input_select.dashboard_tab
+        state: Besturing
+    card:
+      type: vertical-stack
+      cards:
+        - type: entities
+          title: 🔋 Manuele Batterij Activatie
+          entities:
+            - type: button
+              name: Activeer Fase A
+              icon: mdi:battery-charging-50
+              action_name: Activeer
+              tap_action:
+                action: call-service
+                service: script.marstek_activate_fase_a
+            - type: button
+              name: Activeer Fase B
+              icon: mdi:battery-charging-50
+              action_name: Activeer
+              tap_action:
+                action: call-service
+                service: script.marstek_activate_fase_b
+            - type: button
+              name: Activeer Fase C
+              icon: mdi:battery-charging-50
+              action_name: Activeer
+              tap_action:
+                action: call-service
+                service: script.marstek_activate_fase_c
+        - type: entities
+          title: ⚡ Overflow Charging (PV Overschot)
+          entities:
+            - type: button
+              name: Overflow Fase A
+              icon: mdi:battery-plus
+              action_name: Start
+              tap_action:
+                action: call-service
+                service: script.marstek_overflow_fase_a
+            - type: button
+              name: Overflow Fase B
+              icon: mdi:battery-plus
+              action_name: Start
+              tap_action:
+                action: call-service
+                service: script.marstek_overflow_fase_b
+            - type: button
+              name: Overflow Fase C
+              icon: mdi:battery-plus
+              action_name: Start
+              tap_action:
+                action: call-service
+                service: script.marstek_overflow_fase_c
+            - type: button
+              name: Stop Overflow
+              icon: mdi:battery-minus
+              action_name: Stop
+              tap_action:
+                action: call-service
+                service: script.marstek_overflow_stop
+        - type: entities
+          title: ⚙️ Overflow Instellingen
+          entities:
+            - entity: input_number.overflow_power
+              name: Laadvermogen
+            - entity: input_number.overflow_duration
+              name: Duur
+        - type: entities
+          entities:
+            - type: button
+              name: 🛑 Emergency Stop - Alle batterijen naar Manual
+              icon: mdi:stop-circle
+              action_name: STOP
+              tap_action:
+                action: call-service
+                service: script.marstek_all_batteries_manual
+                confirmation:
+                  text: Weet je zeker dat je alle batterijen wilt stoppen?
+        - type: entities
+          entities:
+            - type: button
+              name: 🧹 Clear Manual Schedules
+              icon: mdi:broom
+              action_name: Wissen
+              tap_action:
+                action: call-service
+                service: script.marstek_clear_all_schedules
+                confirmation:
+                  text: >-
+                    Dit wist alle manual schedules van alle batterijen.
+                    Doorgaan?
+  - type: conditional
+    conditions:
+      - entity: input_select.dashboard_tab
+        state: Instellingen
+    card:
+      type: vertical-stack
+      cards:
+        - type: entities
+          title: ⚙️ Algemeen
+          entities:
+            - entity: input_number.battery_switch_delay_minutes
+              name: Min. Tijd Tussen Switches
+  - type: conditional
+    conditions:
+      - entity: input_select.dashboard_tab
+        state: Logboek
+    card:
+      type: vertical-stack
+      cards:
+        - type: logbook
+          title: 📋 Recente Activiteit
+          hours_to_show: 24
+          entities:
+            - input_text.active_battery_fase
+            - input_text.overflow_battery_fase
+            - input_boolean.battery_rotation_enabled
+            - input_boolean.night_charging_active
+            - input_text.night_charging_current_battery
+            - automation.marstek_solar_excess_switch_to_emptiest
+            - automation.marstek_grid_consumption_switch_to_fullest
+            - automation.marstek_overflow_charging_start
+            - automation.marstek_overflow_charging_stop
+            - automation.marstek_overflow_charging_timer_finished

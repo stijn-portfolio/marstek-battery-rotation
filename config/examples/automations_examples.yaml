@@ -1,0 +1,128 @@
+# Marstek Battery Automation Examples
+# Voeg deze toe aan je /config/automations.yaml
+
+# ============================================================================
+# VOORBEELD 1: Laden bij goedkope stroom (Tibber/Nordpool)
+# ============================================================================
+- alias: "Marstek - Laad alle batterijen bij goedkope stroom"
+  description: "Laad met 2000W wanneer stroomprijs onder €0.15/kWh"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.electricity_price  # Pas aan naar jouw price sensor
+      below: 0.15
+  condition:
+    # Alleen als gemiddelde SOC onder 80%
+    - condition: numeric_state
+      entity_id: sensor.marstek_system_average_state_of_charge_2
+      below: 80
+  action:
+    - service: shell_command.marstek_all_charge
+      data:
+        power: 2000      # 2000W laden
+        duration: 7200   # 2 uur
+
+# ============================================================================
+# VOORBEELD 2: Ontladen bij hoge prijzen
+# ============================================================================
+- alias: "Marstek - Ontlaad bij hoge stroomprijs"
+  description: "Ontlaad met 1500W wanneer stroomprijs boven €0.35/kWh"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.electricity_price
+      above: 0.35
+  condition:
+    # Alleen als gemiddelde SOC boven 30%
+    - condition: numeric_state
+      entity_id: sensor.marstek_system_average_state_of_charge_2
+      above: 30
+  action:
+    - service: shell_command.marstek_all_discharge
+      data:
+        power: 1500      # 1500W ontladen
+        duration: 3600   # 1 uur
+
+# ============================================================================
+# VOORBEELD 3: Nachttarief laden (vaste tijden)
+# ============================================================================
+- alias: "Marstek - Nacht laden (23:00-07:00)"
+  description: "Laad alle batterijen tijdens nachttarief"
+  trigger:
+    - platform: time
+      at: "23:00:00"
+  condition:
+    # Alleen doordeweeks
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+  action:
+    - service: shell_command.marstek_all_charge
+      data:
+        power: 2500      # 2500W laden
+        duration: 28800  # 8 uur (tot 07:00)
+
+# Stop laden om 07:00 (terug naar Auto mode)
+- alias: "Marstek - Stop nacht laden"
+  description: "Zet alle batterijen terug naar Auto mode"
+  trigger:
+    - platform: time
+      at: "07:00:00"
+  action:
+    - service: shell_command.marstek_all_auto
+
+# ============================================================================
+# VOORBEELD 4: FaseB laden (lage SOC - 22%)
+# ============================================================================
+- alias: "Marstek - FaseB emergency charge"
+  description: "Laad FaseB wanneer SOC onder 20%"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.marstek_venuse_3_0_9a7d_state_of_charge
+      below: 20
+  action:
+    - service: shell_command.marstek_faseb_charge
+      data:
+        power: 2000      # 2000W laden
+        duration: 10800  # 3 uur
+
+# ============================================================================
+# VOORBEELD 5: Peak shaving (piekverbruik vermijden)
+# ============================================================================
+- alias: "Marstek - Peak shaving"
+  description: "Ontlaad batterijen bij hoog verbruik"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.marstek_system_total_power  # Totaal verbruik
+      above: 5000  # Boven 5000W
+      for:
+        minutes: 2
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.marstek_system_average_state_of_charge_2
+      above: 40
+  action:
+    - service: shell_command.marstek_all_discharge
+      data:
+        power: 2000      # 2000W bijleveren
+        duration: 1800   # 30 min
+
+# ============================================================================
+# VOORBEELD 6: Test automation (handmatig triggeren)
+# ============================================================================
+- alias: "Marstek - Test FaseC laden (manual trigger)"
+  description: "Test automation - trigger handmatig via UI"
+  trigger:
+    - platform: event
+      event_type: test_marstek_charge
+  action:
+    - service: shell_command.marstek_fasec_charge
+      data:
+        power: 1000      # 1000W test
+        duration: 300    # 5 minuten
+
+# Trigger via Developer Tools → Events:
+# Event type: test_marstek_charge
+# Event data: {}

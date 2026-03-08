@@ -1,0 +1,26 @@
+[Unit]
+Description=Marstek MQTT Poller
+Documentation=https://github.com/SDBeu/marstek-battery-rotation
+After=network.target mosquitto.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/marstek-poller
+ExecStart=/usr/bin/python3 /opt/marstek-poller/marstek_poller.py --config /opt/marstek-poller/config.yaml
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=marstek-poller
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/marstek-poller
+
+[Install]
+WantedBy=multi-user.target

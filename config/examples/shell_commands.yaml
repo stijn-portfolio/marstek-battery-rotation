@@ -1,0 +1,29 @@
+# Marstek Battery Control - Shell Commands
+# Voeg dit toe aan je /config/configuration.yaml
+
+shell_command:
+  # FaseA (d828) - 192.168.6.80
+  marstek_fasea_charge: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.80 set-passive --power {{ power|int * -1 }} --duration {{ duration|int }}"
+  marstek_fasea_discharge: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.80 set-passive --power {{ power|int }} --duration {{ duration|int }}"
+  marstek_fasea_auto: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.80 set-mode auto"
+  marstek_fasea_manual: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.80 set-mode manual"
+  marstek_fasea_ai: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.80 set-mode ai"
+
+  # FaseB (9a7d) - 192.168.6.213
+  marstek_faseb_charge: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.213 set-passive --power {{ power|int * -1 }} --duration {{ duration|int }}"
+  marstek_faseb_discharge: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.213 set-passive --power {{ power|int }} --duration {{ duration|int }}"
+  marstek_faseb_auto: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.213 set-mode auto"
+  marstek_faseb_manual: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.213 set-mode manual"
+  marstek_faseb_ai: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.213 set-mode ai"
+
+  # FaseC (deb8) - 192.168.6.144
+  marstek_fasec_charge: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.144 set-passive --power {{ power|int * -1 }} --duration {{ duration|int }}"
+  marstek_fasec_discharge: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.144 set-passive --power {{ power|int }} --duration {{ duration|int }}"
+  marstek_fasec_auto: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.144 set-mode auto"
+  marstek_fasec_manual: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.144 set-mode manual"
+  marstek_fasec_ai: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.144 set-mode ai"
+
+  # All batteries at once
+  marstek_all_charge: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.80 set-passive --power {{ power|int * -1 }} --duration {{ duration|int }} && python test_tool.py --ip 192.168.6.213 set-passive --power {{ power|int * -1 }} --duration {{ duration|int }} && python test_tool.py --ip 192.168.6.144 set-passive --power {{ power|int * -1 }} --duration {{ duration|int }}"
+  marstek_all_discharge: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.80 set-passive --power {{ power|int }} --duration {{ duration|int }} && python test_tool.py --ip 192.168.6.213 set-passive --power {{ power|int }} --duration {{ duration|int }} && python test_tool.py --ip 192.168.6.144 set-passive --power {{ power|int }} --duration {{ duration|int }}"
+  marstek_all_auto: "cd /config/custom_components/marstek_local_api/test && PYTHONIOENCODING=utf-8 python test_tool.py --ip 192.168.6.80 set-mode auto && python test_tool.py --ip 192.168.6.213 set-mode auto && python test_tool.py --ip 192.168.6.144 set-mode auto"

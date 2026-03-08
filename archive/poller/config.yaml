@@ -1,0 +1,62 @@
+# Marstek MQTT Poller Configuration
+# ==================================
+#
+# Dit bestand configureert de MQTT poller voor je Marstek batterijen.
+# Pas de waarden aan naar jouw setup.
+
+# Batterij Configuratie
+# ---------------------
+# Pas de IP adressen aan naar jouw batterijen.
+# De entity_id bepaalt hoe de sensor in Home Assistant heet.
+# Gebruik dezelfde namen als de bestaande HA integratie voor compatibiliteit!
+
+batteries:
+  - name: "Fase A"
+    ip: "192.168.6.80"
+    # Entity ID moet matchen met battery-rotation.yaml
+    entity_id: "marstek_venuse_d828_state_of_charge"
+    device_id: "marstek_fasea_d828"
+
+  - name: "Fase B"
+    ip: "192.168.6.213"
+    entity_id: "marstek_venuse_3_0_9a7d_state_of_charge"
+    device_id: "marstek_faseb_9a7d"
+
+  - name: "Fase C"
+    ip: "192.168.6.144"
+    entity_id: "marstek_venuse_state_of_charge"
+    device_id: "marstek_fasec_deb8"
+
+# MQTT Broker Configuratie
+# ------------------------
+# Pas aan naar jouw MQTT broker (vaak Mosquitto op Home Assistant)
+
+mqtt:
+  host: "core-mosquitto"     # IP of hostname van MQTT broker (core-mosquitto voor HA add-on)
+  port: 1883                 # MQTT port (default: 1883)
+  username: "your_mqtt_username"        # MQTT username
+  password: "your_mqtt_password"        # MQTT password
+  discovery_prefix: "homeassistant"  # HA auto-discovery prefix
+  state_topic_prefix: "marstek"      # Topic prefix voor state updates
+
+# Polling Configuratie
+# --------------------
+# Hoe vaak en met welke timeout de batterijen worden gepolled
+
+polling:
+  interval_seconds: 180      # Poll interval (3 minuten)
+  timeout_seconds: 5         # Timeout per batterij
+
+# API Configuratie
+# ----------------
+# Marstek Local API settings (normaal niet aanpassen)
+
+api:
+  port: 30000                # UDP port voor Marstek API
+
+# Logging
+# -------
+# Log niveau: DEBUG, INFO, WARNING, ERROR
+
+logging:
+  level: "INFO"              # INFO voor normaal gebruik, DEBUG voor troubleshooting
