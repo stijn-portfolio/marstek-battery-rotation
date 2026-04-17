@@ -19,7 +19,7 @@ Automatisch wisselen tussen 3 Marstek Venus E batterijen om:
 
 ## ✨ Features
 
-### Automatische Batterij Rotatie
+### Automatische batterij rotatie
 - **Solar Excess**: Bij zonoverschot wordt de leegste batterij actief om op te laden
 - **Grid Consumption**: Bij netverbruik wordt de volste batterij actief om te ontladen
 - **Smart Switching**: Altijd een actieve batterij (geen gap), snelle switches (5-10 sec)
@@ -32,12 +32,12 @@ Alle instellingen aanpasbaar zonder YAML te editen:
 - SOC limieten (min/max)
 - Nacht/dag tijden
 
-### Night Mode
+### Night mode
 - Automatisch UIT tussen 01:00-07:00 voor night charging
 - Configureerbare tijden via UI
 - Voorkomt conflict met bestaande night charging automations
 
-### Safety Features
+### Safety features
 - Anti-flapping (hysteresis + delays)
 - SOC limieten (niet te leeg/vol)
 - Emergency stop button
@@ -59,7 +59,7 @@ Alle instellingen aanpasbaar zonder YAML te editen:
 
 ---
 
-## ⚠️ Belangrijk: MQTT Poller (Aanbevolen)
+## ⚠️ Belangrijk: MQTT Poller (aanbevolen)
 
 De standaard Marstek Local API integratie heeft **timeout problemen** op veel batterijen. Wij bieden een **lightweight MQTT poller** die alleen de werkende API method (`ES.GetMode`) gebruikt.
 
@@ -75,9 +75,9 @@ De standaard Marstek Local API integratie heeft **timeout problemen** op veel ba
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick start
 
-### Optie A: Met MQTT Poller (Aanbevolen)
+### Optie A: met MQTT Poller (aanbevolen)
 
 #### 1. Installeer MQTT Poller
 ```bash
@@ -89,21 +89,21 @@ sudo systemctl restart marstek-poller
 
 #### 2. Ga verder met stap 2 hieronder
 
-### Optie B: Met HA Integratie (Als het werkt)
+### Optie B: met HA integratie (als het werkt)
 
 #### 1. Installeer Marstek Local API
 Volg de instructies op: https://github.com/jaapp/ha-marstek-local-api
 
 **Let op:** Test eerst of `ES.GetStatus` werkt op jouw batterijen!
 
-### 2. Enable Packages
+### 2. Enable packages
 Voeg toe aan `configuration.yaml`:
 ```yaml
 homeassistant:
   packages: !include_dir_named packages
 ```
 
-### 3. Clone Repo & Maak Symlink
+### 3. Clone repo en maak symlink
 ```bash
 # Clone de repo naar je HA machine
 cd /homeassistant
@@ -116,7 +116,7 @@ mkdir -p /homeassistant/packages
 ln -s /homeassistant/marstek-battery-rotation/config/packages/battery-rotation.yaml /homeassistant/packages/battery-rotation.yaml
 ```
 
-### 4. Updates Binnenhalen
+### 4. Updates binnenhalen
 Na een `git pull` wordt de config automatisch bijgewerkt via de symlink:
 ```bash
 cd /homeassistant/marstek-battery-rotation
@@ -124,7 +124,7 @@ git pull
 # Daarna in HA: Developer Tools → YAML → Reload All YAML
 ```
 
-### 5. Pas Button Entity Names Aan
+### 5. Pas button entity names aan
 Edit `battery-rotation.yaml` en vervang de button entity names met jouw batterijen:
 ```yaml
 # Vind jouw entity names in Developer Tools → States
@@ -136,13 +136,13 @@ Edit `battery-rotation.yaml` en vervang de button entity names met jouw batterij
 Developer Tools → YAML → Restart
 ```
 
-### 7. Configureer Settings
+### 7. Configureer settings
 Ga naar **Instellingen → Apparaten en diensten → Helpers** en pas aan:
 - Nachtmodus Start (bijv. 01:00)
 - Dagmodus Start (bijv. 07:00)
 - Switch delay (min. tijd tussen switches)
 
-### 8. Installeer Dashboard (Optioneel)
+### 8. Installeer dashboard (optioneel)
 Kopieer `dashboards/battery-rotation-card.yaml` naar je Lovelace dashboard.
 
 ---
@@ -158,9 +158,9 @@ Kopieer `dashboards/battery-rotation-card.yaml` naar je Lovelace dashboard.
 
 ---
 
-## ⚙️ Configuratie Overzicht
+## ⚙️ Configuratie overzicht
 
-### Belangrijkste Instellingen
+### Belangrijkste instellingen
 
 | Setting | Default | Beschrijving |
 |---------|---------|--------------|
@@ -175,9 +175,9 @@ Zie [Configuration Guide](docs/CONFIGURATION.md) voor details.
 
 ---
 
-## 🎯 Hoe Het Werkt
+## 🎯 Hoe het werkt
 
-### Dagelijkse Timeline
+### Dagelijkse timeline
 
 ```
 23:00  → Rotatie actief (intelligente switching)
@@ -189,7 +189,7 @@ Zie [Configuration Guide](docs/CONFIGURATION.md) voor details.
         → Intelligente rotatie start
 ```
 
-### Switching Logic
+### Switching logic
 
 **Bij Zonoverschot (P1 < -500W voor 2 min):**
 ```
@@ -225,19 +225,19 @@ Het optionele dashboard biedt:
 
 ## 🧪 Testen
 
-### Unit Tests
+### Unit tests
 ```bash
 cd tests/api
 python apiTest.py
 ```
 
-### Battery Tests
+### Battery tests
 ```bash
 cd tests/battery
 python test_all_batteries.py
 ```
 
-### Entity Verification
+### Entity verification
 ```bash
 cd tests
 python verify-entities.py
@@ -249,7 +249,7 @@ python verify-entities.py
 
 Bijdragen zijn welkom! Zie [CONTRIBUTING.md](CONTRIBUTING.md) voor details.
 
-### Development Setup
+### Development setup
 ```bash
 git clone https://github.com/SDBeu/marstek-battery-rotation.git
 cd marstek-battery-rotation
