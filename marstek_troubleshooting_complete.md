@@ -1,5 +1,5 @@
 # MARSTEK BATTERY ROTATION - TROUBLESHOOTING & FIXES
-## Complete Context & Analysis
+## Complete context & analysis
 
 **Datum:** 26 november 2024  
 **Systeem:** 3x Marstek thuisbatterijen met Home Assistant rotatie systeem  
@@ -9,7 +9,7 @@
 
 ## SECTIE A: PROBLEEM ANALYSE & CONTEXT
 
-### PROBLEEM 1: Mode Sensors Geven Vaak "Unknown"
+### PROBLEEM 1: mode sensors geven vaak "Unknown"
 
 #### Symptomen
 - `sensor.marstek_venuse_3_0_9a7d_mode` (Fase B) geeft regelmatig "unknown"
@@ -33,12 +33,12 @@
 - **Peak Assist kan verkeerde batterij selecteren:** Als mode unknown is, denkt systeem dat batterij inactief is
 - **Grid consumption switch kan interfereren:** Denkt dat batterij beschikbaar is terwijl die actief is
 
-#### Root Cause
+#### Root cause
 Mode sensors zijn fundamenteel onbetrouwbaar in dit systeem. We kunnen er geen logica op bouwen die 100% van de tijd moet werken.
 
 ---
 
-### PROBLEEM 2: Twee Batterijen Tegelijk op Auto Mode
+### PROBLEEM 2: twee batterijen tegelijk op auto mode
 
 #### Symptomen
 - User ziet soms (tijdelijk) twee batterijen tegelijk op Auto staan in de Marstek app
@@ -66,7 +66,7 @@ Alle switch automations gebruiken dit patroon:
 
 **Gedurende die 5 seconden staan TWEE batterijen op Auto!**
 
-#### Timing & Observaties
+#### Timing & observaties
 - Dit patroon komt voor in:
   * marstek_manual_toggle_on
   * marstek_solar_excess_switch
@@ -79,7 +79,7 @@ Alle switch automations gebruiken dit patroon:
 2. **Voorkomen gap:** Anders moment zonder actieve batterij (ook problematisch)
 3. **API response tijd:** Wachten tot commando verwerkt is
 
-#### Mogelijke Scenario's die Misgaan
+#### Mogelijke scenario's die misgaan
 
 **Scenario 1: Conflicterende Load Sharing**
 ```
@@ -109,7 +109,7 @@ Beide batterijen op Auto tijdens zonoverschot:
 - Totaal: 4000W van PV/grid in plaats van verwachte 2000W
 ```
 
-#### Afgewogen Alternatieven
+#### Afgewogen alternatieven
 
 **Optie A: Omkeren volgorde (AFGEWEZEN)**
 - Eerst oude UIT, dan nieuwe AAN
@@ -130,17 +130,17 @@ Beide batterijen op Auto tijdens zonoverschot:
 - Voeg safeguards toe (cooldowns, conflict preventie)
 - GEKOZEN
 
-#### Root Cause
+#### Root cause
 Het systeem probeert een "make-before-break" patroon te gebruiken (nieuwe aan voor oude uit) om een gap te voorkomen. De 5 seconden delay is een workaround maar creëert een conflict window waarin twee batterijen actief zijn.
 
-#### Gekozen Oplossing
+#### Gekozen oplossing
 - Verlaag delay van 5 → 2 seconden (minimaliseer overlap)
 - Voeg 30 seconden cooldown toe na switches voor Peak Assist
 - Accepteer dat we mode sensors niet kunnen vertrouwen voor verificatie
 
 ---
 
-### PROBLEEM 3: Ochtend Failure - Fase A Verdwijnt, Peak Assist Faalt
+### PROBLEEM 3: ochtend failure - fase a verdwijnt, peak assist faalt
 
 #### Symptomen
 **Datum:** Vandaag, 26 november 2024, om 07:00
@@ -157,7 +157,7 @@ Wat er gebeurde:
 - Peak Assist triggert (verkeerde batterij/onvoldoende vermogen)
 - Verbruik niet gedekt
 
-#### Timeline Reconstructie
+#### Timeline reconstructie
 ```
 07:00:00 - Morning mode trigger
 07:00:01 - Rotatie AAN
@@ -205,7 +205,7 @@ Wat er gebeurde:
 - Verbruik: 3000W
 - Tekort: 2000W → komt van net
 
-#### Root Cause Analyse
+#### Root cause analyse
 **WAARSCHIJNLIJK:** Combinatie van Hypothese 1 + 3:
 1. Morning mode start, Fase A → Auto
 2. Fase A heeft NOG manual schedule (van vannacht)
@@ -224,7 +224,7 @@ Wat er gebeurde:
 
 ---
 
-### PROBLEEM 4: Oude Manual Schedules Blijven Actief
+### PROBLEEM 4: oude manual schedules blijven actief
 
 #### Ontdekking
 User merkte op: "Ik denk dat er inderdaad nog ergens een oude manual schedule stond op een batterij. Ik zie dat hij deze nacht (manual loading) niet alleen het voorgestelde programma heeft geladen maar ook nog extra in de late nachturen, hetgeen ik ooit manueel in de app had ingegeven."
@@ -247,7 +247,7 @@ Vannacht:
 3. **Verkeerde mode detectie:** Schedule actief terwijl batterij op Auto staat → Marstek firmware confused?
 4. **Root cause van Probleem 3:** Morning mode failure was waarschijnlijk hierdoor
 
-#### Waarom Gebeurt Dit?
+#### Waarom gebeurt dit?
 - `marstek_local_api.set_manual_schedule` VOEGT toe, overschrijft niet
 - `marstek_local_api.clear_manual_schedules` wordt alleen aangeroepen:
   * Aan EINDE van morning mode (na batterij activatie)
@@ -261,7 +261,7 @@ Morning mode cleared aan het einde omdat:
 
 ---
 
-### PROBLEEM 5: Oneindige Rotatie bij Volle Batterijen
+### PROBLEEM 5: oneindige rotatie bij volle batterijen
 
 #### Symptomen
 **Datum:** Vandaag, 26 november 2024, veel zon
@@ -284,7 +284,7 @@ Observatie:
 ... LOOP CONTINUES ...
 ```
 
-#### Root Cause
+#### Root cause
 Solar excess switch conditie:
 ```yaml
 # Actieve batterij SOC >= 85% (bijna vol)
@@ -312,7 +312,7 @@ Probleem:
 - Overtollige PV kan niet naar net (batterij probeert steeds te laden)
 - Slijtage door onnodige switches
 
-#### Waarom Geen Auto-Stop?
+#### Waarom geen auto-Stop?
 - Systeem ontworpen voor continues rotatie
 - Geen "exit condition" bij alle batterijen vol
 - Assumptie: altijd minstens één batterij heeft ruimte
@@ -321,9 +321,9 @@ Probleem:
 
 ## SECTIE B: GEKOZEN OPLOSSINGEN
 
-### OPLOSSING 1: Clear Old Schedules Voor Night Charging
+### OPLOSSING 1: clear old schedules voor night charging
 
-#### Waarom Deze Aanpak?
+#### Waarom deze aanpak?
 - **Preventief:** Wist oude schedules VOOR nieuwe worden ingesteld
 - **Clean slate:** Elk nacht systeem start met lege schedules  
 - **Voorspelbaar:** HA heeft volledige controle over schedules
@@ -349,12 +349,12 @@ Probleem:
    - User kan handmatig cleanup triggeren
    - Voor als iets fout gaat of testen
 
-#### Verwacht Gedrag Na Fix
+#### Verwacht gedrag na fix
 - Vannacht: alleen HA schedules actief, geen oude app schedules
 - Morning mode: minder kans op conflicts (schedules worden later gewist)
 - Voorspelbaar laadgedrag
 
-#### Afgewogen Alternatieven
+#### Afgewogen alternatieven
 
 **Alternatief A: Daily Cleanup om 18:00 (AFGEWEZEN)**
 - Zou proactief alle schedules wissen
@@ -369,9 +369,9 @@ Probleem:
 
 ---
 
-### OPLOSSING 2: Verkort Delay + Cooldown voor Peak Assist
+### OPLOSSING 2: verkort delay + cooldown voor peak assist
 
-#### Waarom Deze Aanpak?
+#### Waarom deze aanpak?
 We kunnen Probleem 2 (twee batterijen op Auto) niet volledig oplossen omdat:
 - Mode sensors unreliable (Probleem 1)
 - Make-before-break nodig om gap te voorkomen
@@ -396,13 +396,13 @@ Dus: **minimaliseer het probleem, voeg safeguards toe**
    - Check: `last_battery_switch` timestamp
    - Voorkomt Scenario 2 (Peak Assist tijdens switch)
 
-#### Verwacht Gedrag Na Fix
+#### Verwacht gedrag na fix
 - Overlap window: 5 sec → 2 sec (60% reductie)
 - Minder kans op conflicten
 - User ziet mode status in notificatie
 - Peak Assist triggert niet tijdens switches
 
-#### Wat Dit NIET Oplost
+#### Wat dit NIET oplost
 - Twee batterijen kunnen nog steeds 2 seconden tegelijk op Auto staan
 - Mode sensors blijven unreliable
 - Geen 100% garantie tegen conflicts
@@ -414,9 +414,9 @@ Dus: **minimaliseer het probleem, voeg safeguards toe**
 
 ---
 
-### OPLOSSING 3: Auto-Stop bij Volle Batterijen
+### OPLOSSING 3: auto-Stop bij volle batterijen
 
-#### Waarom Deze Aanpak?
+#### Waarom deze aanpak?
 Bij alle batterijen vol (95%+) EN zonoverschot:
 - Batterijen kunnen niets meer opnemen
 - Roteren heeft geen zin (alle batterijen vol)
@@ -452,7 +452,7 @@ Bij alle batterijen vol (95%+) EN zonoverschot:
 - True wanneer alle >= 95%
 - Attributes: lowest_soc, highest_soc
 
-#### Verwacht Gedrag Na Fix
+#### Verwacht gedrag na fix
 
 **Scenario 1: Zonnige dag, batterijen vol**
 ```
@@ -471,7 +471,7 @@ Bij alle batterijen vol (95%+) EN zonoverschot:
 11:05 - Systeem blijft roteren tussen B (leegst) en anderen
 ```
 
-#### Afgewogen Alternatieven
+#### Afgewogen alternatieven
 
 **Alternatief A: Threshold 90% ipv 95% (AFGEWEZEN)**
 - Te vroeg, batterijen kunnen nog 5% opnemen
@@ -522,7 +522,7 @@ Bij alle batterijen vol (95%+) EN zonoverschot:
    - Dashboard indicator
    - Attributes: lowest_soc, highest_soc
 
-### Test Criteria
+### Test criteria
 
 **Test 1: Night Charging**
 - Start nachtladen
@@ -552,7 +552,7 @@ Bij alle batterijen vol (95%+) EN zonoverschot:
 
 ## SECTIE D: BEKENDE BEPERKINGEN & EDGE CASES
 
-### Nog Niet Opgelost
+### Nog niet opgelost
 
 1. **Mode Sensors Unreliable**
    - Root cause: firmware/API issue
@@ -569,7 +569,7 @@ Bij alle batterijen vol (95%+) EN zonoverschot:
    - Status: Trade-off geaccepteerd (Peak Assist > clean start)
    - Alternative: User kan manual cleanup script draaien voor morning mode
 
-### Edge Cases
+### Edge cases
 
 **Edge Case 1: Alle batterijen 94%**
 ```
@@ -610,7 +610,7 @@ Resultaat: Tijdelijk netverbruik
 Status: Acceptabel (zeldzame timing, korte duur)
 ```
 
-### Open Vragen
+### Open vragen
 
 1. **Optimale Auto-Stop Threshold?**
    - Nu: 95%
@@ -627,7 +627,7 @@ Status: Acceptabel (zeldzame timing, korte duur)
    - Vraag: Is dit nodig met 2 sec delay?
    - Monitor: Triggert Peak Assist nog tijdens switches?
 
-### Toekomstige Verbeteringen
+### Toekomstige verbeteringen
 
 1. **Mode Sensor Fallback:**
    - Gebruik battery_power of grid_power als indicator

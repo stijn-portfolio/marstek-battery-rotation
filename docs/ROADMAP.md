@@ -1,4 +1,4 @@
-# Marstek Venus Battery - Home Assistant Integratie Roadmap
+# Marstek Venus battery - Home Assistant integratie roadmap
 
 **Laatst bijgewerkt**: 2025-11-16
 **Status**: Batterij Besturing - Testing & Implementatie
@@ -15,7 +15,7 @@ Meerdere Marstek Venus E batterijen uitlezen en aansturen via Home Assistant, zo
 
 ---
 
-## 📋 Architectuur Keuze
+## 📋 Architectuur keuze
 
 **Gekozen aanpak**: MQTT Bridge
 
@@ -34,9 +34,9 @@ Meerdere Marstek Venus E batterijen uitlezen en aansturen via Home Assistant, zo
 
 ---
 
-## 🚀 Implementatie Fases
+## 🚀 Implementatie fases
 
-### ✅ FASE 0: Initiële Verkenning (COMPLEET)
+### ✅ FASE 0: initiële verkenning (COMPLEET)
 
 **Status**: ✅ Afgerond op 2025-11-13
 
@@ -67,7 +67,7 @@ Meerdere Marstek Venus E batterijen uitlezen en aansturen via Home Assistant, zo
 
 ---
 
-### ✅ FASE 1: Home Assistant Verificatie (COMPLEET)
+### ✅ FASE 1: Home Assistant verificatie (COMPLEET)
 
 **Status**: ✅ Afgerond op 2025-11-13
 
@@ -108,7 +108,7 @@ Meerdere Marstek Venus E batterijen uitlezen en aansturen via Home Assistant, zo
 
 ---
 
-### ✅ FASE 2: API Parameters Uitzoeken (COMPLEET)
+### ✅ FASE 2: API parameters uitzoeken (COMPLEET)
 
 **Status**: ✅ Afgerond op 2025-11-13
 
@@ -161,7 +161,7 @@ ES.GetStatus result:
 
 ---
 
-### 🔲 FASE 3: Marstek API Client Class
+### 🔲 FASE 3: Marstek API client class
 
 **Status**: 🔲 Nog te doen
 
@@ -196,7 +196,7 @@ class MarstekAPI:
 
 ---
 
-### 🔲 FASE 4: MQTT Bridge Implementatie
+### 🔲 FASE 4: MQTT bridge implementatie
 
 **Status**: 🔲 Nog te doen
 
@@ -251,7 +251,7 @@ class MarstekAPI:
 
 ---
 
-### 🔲 FASE 5: Home Assistant Command Handler
+### 🔲 FASE 5: Home Assistant command handler
 
 **Status**: 🔲 Nog te doen
 
@@ -283,7 +283,7 @@ class MarstekAPI:
 
 ---
 
-### 🔲 FASE 6: Multi-Battery Support
+### 🔲 FASE 6: multi-battery support
 
 **Status**: 🔲 Nog te doen (toekomst)
 
@@ -306,13 +306,13 @@ batteries:
 
 ---
 
-## 🎯 Stappenplan: Batterij Besturing (Session 2 - Nov 2025)
+## 🎯 Stappenplan: batterij besturing (Session 2 - nov 2025)
 
 **Use Case**: Zelfverbruik optimaliseren + PV opslag
 **Stroomprijzen**: Engie tarievenplan (dal/piek/superdal)
 **Batterijen**: 3x Marstek Venus E (FaseA, FaseB, FaseC)
 
-### 🔲 FASE 1: Basis Test - Handmatige Besturing
+### 🔲 FASE 1: basis test - handmatige besturing
 **Status**: 🔲 Ready to start
 **Doel**: Verifieer dat we 1 batterij kunnen aansturen
 
@@ -334,7 +334,7 @@ batteries:
 
 ---
 
-### 🔲 FASE 2: Engie Tarievenplan Integreren
+### 🔲 FASE 2: Engie tarievenplan integreren
 **Status**: 🔲 Waiting
 **Doel**: Automatisch laden tijdens dal/superdal periodes
 
@@ -356,7 +356,7 @@ batteries:
 
 ---
 
-### 🔲 FASE 3: PV Zelfverbruik Optimalisatie
+### 🔲 FASE 3: PV zelfverbruik optimalisatie
 **Status**: 🔲 Waiting
 **Doel**: PV overschot opslaan in batterijen
 
@@ -380,7 +380,7 @@ batteries:
 
 ---
 
-### 🔲 FASE 4: Dashboard & Monitoring
+### 🔲 FASE 4: dashboard & monitoring
 **Status**: 🔲 Optioneel
 **Doel**: Overzichtelijk dashboard
 
@@ -393,7 +393,7 @@ batteries:
 
 ---
 
-### 🔲 FASE 5: Geavanceerde Optimalisatie
+### 🔲 FASE 5: geavanceerde optimalisatie
 **Status**: 🔲 Toekomst
 **Doel**: Machine learning / voorspellende controle
 
@@ -406,21 +406,21 @@ batteries:
 
 ---
 
-## 🐛 Bekende Issues & Problemen
+## 🐛 Bekende issues & problemen
 
-### Issue #1: Invalid Params Errors
+### Issue #1: invalid params errors
 **Status**: ✅ Opgelost
 **Impact**: Was hoog - blokkeerde batterij data uitlezen
 **Oplossing**: Correcte params gevonden via jaapp/ha-marstek-local-api code
 **Resolutie**: Alle core methods werken nu met `{"id": 0}` als params
 
-### Issue #2: Onbekende Parameter Formats
+### Issue #2: onbekende parameter formats
 **Status**: ✅ Opgelost
 **Impact**: Was hoog - blokkeerde data uitlezen
 **Oplossing**: Source code analyse van jaapp/ha-marstek-local-api
 **Resolutie**: Parameters gedocumenteerd, ES.GetStatus en ES.GetMode werken perfect
 
-### Issue #3: MQTT Authenticatie Vereist
+### Issue #3: MQTT authenticatie vereist
 **Status**: ✅ Opgelost
 **Impact**: Was hoog - blokkeerde MQTT testing
 **Oplossing**: MQTT gebruiker aangemaakt (username: marstek)
@@ -428,9 +428,9 @@ batteries:
 
 ---
 
-## 📚 Resources & Links
+## 📚 Resources & links
 
-### Werkende Community Implementaties
+### Werkende community implementaties
 - **Homey App**: https://community.homey.app/t/marstek-venus-connector-app-development-thread/143139
   - Gebruikt Local API succesvol
   - Kan gebruikt worden als referentie voor parameters
@@ -443,19 +443,19 @@ batteries:
   - Web-based BLE tool
   - Volledige protocol documentatie
 
-### Officiële Documentatie
+### Officiële documentatie
 - **Marstek Open API**: https://eu.hamedata.com/ems/resource/agreement/MarstekDeviceOpenApi.pdf
   - PDF (moeilijk te parsen)
   - Officiële API specificatie
 
-### Home Assistant Resources
+### Home Assistant resources
 - **MQTT Discovery**: https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery
 - **MQTT Sensor**: https://www.home-assistant.io/integrations/sensor.mqtt/
 - **MQTT Select**: https://www.home-assistant.io/integrations/select.mqtt/
 
 ---
 
-## 🔄 Session Log
+## 🔄 Session log
 
 ### Session 1 - 2025-11-13
 

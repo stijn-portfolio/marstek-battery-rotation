@@ -1,12 +1,12 @@
-# MQTT Poller voor Marstek Batterijen
+# MQTT poller voor Marstek batterijen
 
 Lightweight Python service die Marstek batterijen pollt via de **enige betrouwbare API method** (`ES.GetMode`) en de data publiceert naar MQTT met Home Assistant auto-discovery.
 
 ---
 
-## Waarom Deze Poller?
+## Waarom deze poller?
 
-### Het Probleem
+### Het probleem
 
 De standaard Marstek Local API Home Assistant integratie gebruikt `ES.GetStatus` om batterij data op te halen. **Dit faalt op veel Marstek batterijen** (inclusief Venus E v3):
 
@@ -21,7 +21,7 @@ De standaard Marstek Local API Home Assistant integratie gebruikt `ES.GetStatus`
 - Kan leiden tot batterij lockups (batterij wordt onbereikbaar)
 - HA krijgt geen SOC data → battery rotation werkt niet
 
-### De Oplossing
+### De oplossing
 
 Deze poller gebruikt **alleen ES.GetMode** - de enige method die betrouwbaar werkt op alle geteste batterijen.
 
@@ -71,7 +71,7 @@ Dit is **alles wat nodig is** voor battery rotation!
 - MQTT Broker (bijv. Mosquitto) - meestal al aanwezig op HA
 - Netwerk toegang tot Marstek batterijen (UDP port 30000)
 
-### Optie 1: Automatische Installatie (Linux/HA OS)
+### Optie 1: automatische installatie (Linux/HA OS)
 
 ```bash
 # Download of clone repository
@@ -88,7 +88,7 @@ sudo nano /opt/marstek-poller/config.yaml
 sudo systemctl restart marstek-poller
 ```
 
-### Optie 2: Handmatige Installatie
+### Optie 2: handmatige installatie
 
 ```bash
 # 1. Installeer dependencies
@@ -112,7 +112,7 @@ systemctl enable marstek-poller
 systemctl start marstek-poller
 ```
 
-### Optie 3: Draaien op Windows (voor testen)
+### Optie 3: draaien op Windows (voor testen)
 
 ```powershell
 # Installeer dependencies
@@ -172,7 +172,7 @@ logging:
   level: "INFO"           # DEBUG voor troubleshooting
 ```
 
-### Entity ID Matching
+### Entity ID matching
 
 **Belangrijk:** De `entity_id` in config.yaml moet matchen met de entity names in `battery-rotation.yaml`!
 
@@ -187,9 +187,9 @@ Door dezelfde entity_id te gebruiken in de poller, werkt battery rotation **zond
 
 ---
 
-## Home Assistant Integratie
+## Home Assistant integratie
 
-### Automatische Sensors (via MQTT Discovery)
+### Automatische sensors (via MQTT discovery)
 
 De poller publiceert auto-discovery configs naar MQTT. Na starten verschijnen automatisch:
 
@@ -198,7 +198,7 @@ De poller publiceert auto-discovery configs naar MQTT. Na starten verschijnen au
 - `sensor.marstek_*_mode` - Modus (Auto/Manual/AI/Passive)
 - `sensor.marstek_*_power` - Power (W)
 
-### MQTT Topics
+### MQTT topics
 
 ```
 # State topics (JSON payload)
@@ -218,7 +218,7 @@ homeassistant/sensor/marstek_fasea_d828_power/config
 # etc...
 ```
 
-### State Payload Voorbeeld
+### State payload voorbeeld
 
 ```json
 {
@@ -234,7 +234,7 @@ homeassistant/sensor/marstek_fasea_d828_power/config
 
 ## Gebruik
 
-### Service Commando's
+### Service commando's
 
 ```bash
 # Status bekijken
@@ -256,7 +256,7 @@ sudo systemctl stop marstek-poller
 sudo systemctl disable marstek-poller
 ```
 
-### Test Modus
+### Test modus
 
 Test de verbinding met batterijen zonder MQTT:
 
@@ -278,7 +278,7 @@ Testing Fase C (192.168.6.144)...
 === TEST COMPLETE ===
 ```
 
-### Debug Logging
+### Debug logging
 
 Voor meer details, zet log level op DEBUG in config.yaml:
 
@@ -296,7 +296,7 @@ sudo systemctl restart marstek-poller
 
 ## Troubleshooting
 
-### Probleem: Geen MQTT verbinding
+### Probleem: geen MQTT verbinding
 
 **Symptoom:** Logs tonen "MQTT connection failed"
 
@@ -306,7 +306,7 @@ sudo systemctl restart marstek-poller
 3. Check credentials (username/password)
 4. Test met `mosquitto_sub -h localhost -t "marstek/#" -v`
 
-### Probleem: Batterij timeout
+### Probleem: batterij timeout
 
 **Symptoom:** Logs tonen "No response" voor een batterij
 
@@ -316,7 +316,7 @@ sudo systemctl restart marstek-poller
 3. Check batterij IP (kan gewijzigd zijn na DHCP)
 4. Local API moet enabled zijn op batterij
 
-### Probleem: Sensors verschijnen niet in HA
+### Probleem: sensors verschijnen niet in HA
 
 **Symptoom:** Na starten poller, geen nieuwe sensors in HA
 
@@ -337,7 +337,7 @@ sudo systemctl restart marstek-poller
 
 ---
 
-## Vergelijking met HA Integratie
+## Vergelijking met HA integratie
 
 | Aspect | HA Integratie | MQTT Poller |
 |--------|---------------|-------------|
@@ -371,26 +371,26 @@ Deze werken al en hoeven niet gewijzigd te worden!
 
 ---
 
-## Migratie van HA Integratie
+## Migratie van HA integratie
 
-### Stap 1: Disable HA Integratie
+### Stap 1: disable HA integratie
 
 1. Ga naar **Settings → Devices & Services → Marstek Local API**
 2. Klik op de 3 dots → **Delete**
 3. Herstart HA
 
-### Stap 2: Installeer MQTT Poller
+### Stap 2: installeer MQTT poller
 
 Volg de installatie instructies hierboven.
 
-### Stap 3: Verify Sensors
+### Stap 3: verify sensors
 
 Na installatie, check in HA:
 - **Developer Tools → States**
 - Zoek naar `sensor.marstek_venuse_*`
 - Sensors moeten zelfde naam hebben als voorheen
 
-### Stap 4: Test Battery Rotation
+### Stap 4: test battery rotation
 
 1. Enable battery rotation: `input_boolean.battery_rotation_enabled` → ON
 2. Check of automations triggeren
@@ -400,7 +400,7 @@ Na installatie, check in HA:
 
 ## Geavanceerd
 
-### Meerdere Instances
+### Meerdere instances
 
 Als je batterijen op verschillende netwerken hebt, kun je meerdere instances draaien:
 
@@ -429,7 +429,7 @@ docker build -t marstek-poller .
 docker run -d --name marstek-poller --network host marstek-poller
 ```
 
-### Custom MQTT Topics
+### Custom MQTT topics
 
 Als je andere topic structuur wilt, pas `state_topic_prefix` aan:
 
@@ -444,7 +444,7 @@ Topics worden dan:
 
 ---
 
-## Zie Ook
+## Zie ook
 
 - [README.md](../README.md) - Project overzicht
 - [INSTALLATION.md](INSTALLATION.md) - Battery rotation installatie

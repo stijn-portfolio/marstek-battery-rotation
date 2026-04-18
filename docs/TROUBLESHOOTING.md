@@ -1,10 +1,10 @@
-# 🔧 Troubleshooting Guide
+# 🔧 Troubleshooting guide
 
 Veelvoorkomende problemen en oplossingen voor het Marstek Battery Rotation systeem.
 
 ---
 
-## 📋 Quick Diagnostic Checklist
+## 📋 Quick diagnostic checklist
 
 Voordat je begint met troubleshooting, check deze basis zaken:
 
@@ -17,9 +17,9 @@ Voordat je begint met troubleshooting, check deze basis zaken:
 
 ---
 
-## 🚨 Kritische Problemen
+## 🚨 Kritische problemen
 
-### ❌ PROBLEEM: Grid Consumption Tijdens Switch (30+ seconden)
+### ❌ PROBLEEM: grid consumption tijdens switch (30+ seconden)
 
 **Symptoom:**
 - Tijdens batterij switch: P1 meter springt naar +500W tot +2000W
@@ -73,14 +73,14 @@ action:
 
 ---
 
-### ❌ PROBLEEM: Automation Triggert Niet
+### ❌ PROBLEEM: automation triggert niet
 
 **Symptoom:**
 - Zonoverschot of netverbruik, maar geen batterij switch
 - Automation staat in traces maar wordt niet triggered
 - Batterij blijft hele dag op Fase A
 
-#### **Diagnose Stap 1: Check Automation Enabled**
+#### **Diagnose stap 1: check automation enabled**
 ```yaml
 Settings → Automations → Zoek "Marstek"
 # Alle 3 automations moeten "Enabled" zijn:
@@ -89,7 +89,7 @@ Settings → Automations → Zoek "Marstek"
 - Marstek: Grid Consumption - Switch to Fullest ✅
 ```
 
-#### **Diagnose Stap 2: Check System Enabled**
+#### **Diagnose stap 2: check system enabled**
 ```yaml
 Developer Tools → States → Zoek "input_boolean.battery_rotation_enabled"
 # Moet "on" zijn, anders is systeem UIT
@@ -100,7 +100,7 @@ Developer Tools → States → Zoek "input_boolean.battery_rotation_enabled"
 Settings → Devices & Services → Helpers → "Batterij Rotatie Systeem" → Toggle ON
 ```
 
-#### **Diagnose Stap 3: Check P1 Power Sensor**
+#### **Diagnose stap 3: check P1 power sensor**
 ```yaml
 Developer Tools → States → sensor.p1_meter_power
 # Moet een getal zijn (positief of negatief)
@@ -123,7 +123,7 @@ Developer Tools → States → sensor.p1_meter_power
    # Met jouw sensor naam (check in States)
    ```
 
-#### **Diagnose Stap 4: Check Hysteresis & Delays**
+#### **Diagnose stap 4: check hysteresis & delays**
 ```yaml
 Developer Tools → States
 # Check configuratie:
@@ -144,7 +144,7 @@ Verlaag hysteresis naar -200W:
 Settings → Devices & Services → Helpers → "Switch Hysteresis - Zon" → 200
 ```
 
-#### **Diagnose Stap 5: Check Switch Delay**
+#### **Diagnose stap 5: check switch delay**
 ```yaml
 Developer Tools → States → input_datetime.last_battery_switch
 # Kijk naar laatste switch tijd
@@ -161,7 +161,7 @@ Developer Tools → States → input_datetime.last_battery_switch
   Settings → Helpers → "Min Tijd Tussen Switches" → 1 minuut
   ```
 
-#### **Diagnose Stap 6: Check SOC Limieten**
+#### **Diagnose stap 6: check SOC limieten**
 ```yaml
 # Scenario: Solar Excess trigger
 sensor.battery_emptiest = "none"  # Alle batterijen te vol!
@@ -182,7 +182,7 @@ sensor.marstek_venuse_state_of_charge: 89%              # Fase C
   ```
 - OF wacht tot batterijen ontladen
 
-#### **Diagnose Stap 7: Check Automation Traces**
+#### **Diagnose stap 7: check automation traces**
 ```yaml
 Settings → Automations → "Marstek: Solar Excess..." → Traces
 # Klik op laatste trace (of "Run" om te forceren)
@@ -210,14 +210,14 @@ Settings → Automations → "Marstek: Solar Excess..." → Traces
 
 ---
 
-### ❌ PROBLEEM: Button Press Fails
+### ❌ PROBLEEM: button press fails
 
 **Symptoom:**
 - Automation draait, maar button press werkt niet
 - Error in logs: "Entity not found" of "Service call failed"
 - Batterij mode wijzigt niet
 
-#### **Diagnose Stap 1: Check Button Entities**
+#### **Diagnose stap 1: check button entities**
 ```yaml
 Developer Tools → States → Zoek "button.fasea"
 # Je moet zien (voor elke batterij):
@@ -235,7 +235,7 @@ button.fasec_geen_deb8_manual_mode       # Fase C Manual
 3. Restart integratie
 4. Hernoem entities in configuratie als jouw entities anders heten
 
-#### **Diagnose Stap 2: Test Button Handmatig**
+#### **Diagnose stap 2: test button handmatig**
 ```yaml
 Developer Tools → Services
 # Service: button.press
@@ -247,7 +247,7 @@ Developer Tools → Services
 # Als dit NIET werkt: Probleem met Marstek Local API integratie
 ```
 
-#### **Diagnose Stap 3: Check Marstek Local API Logs**
+#### **Diagnose stap 3: check Marstek local API logs**
 ```yaml
 Settings → System → Logs → Filter "marstek"
 # Zoek naar errors zoals:
@@ -268,7 +268,7 @@ Settings → System → Logs → Filter "marstek"
 3. Reconfigure Marstek Local API integratie met correcte IP
 4. Enable Local API op batterij (via BLE 0x28 command)
 
-#### **Diagnose Stap 4: Check Entity Namen in Config**
+#### **Diagnose stap 4: check entity namen in config**
 ```yaml
 # Open config/packages/battery-rotation.yaml
 # Zoek naar button entities in scripts (regel ~407)
@@ -284,7 +284,7 @@ Edit `battery-rotation.yaml` en vervang alle button entities met correcte namen.
 
 ---
 
-### ❌ PROBLEEM: Te Veel Switches (Flapping)
+### ❌ PROBLEEM: te veel switches (Flapping)
 
 **Symptoom:**
 - 20+ switches per dag
@@ -302,7 +302,7 @@ Developer Tools → Logbook → Filter "battery_rotation"
 
 **Mogelijke Oorzaken:**
 
-#### **Oorzaak 1: Hysteresis Te Laag**
+#### **Oorzaak 1: hysteresis te laag**
 ```yaml
 # Settings:
 battery_switch_hysteresis_solar: 100W  # TE LAAG!
@@ -319,7 +319,7 @@ battery_switch_hysteresis_solar: 500-800W
 battery_switch_hysteresis_grid: 200-500W
 ```
 
-#### **Oorzaak 2: Trigger Delay Te Kort**
+#### **Oorzaak 2: trigger delay te kort**
 ```yaml
 # Settings:
 trigger_delay_solar: 0.5 min  # TE KORT!
@@ -336,7 +336,7 @@ trigger_delay_solar: 5 min
 trigger_delay_grid: 5 min
 ```
 
-#### **Oorzaak 3: Switch Delay Te Kort**
+#### **Oorzaak 3: switch delay te kort**
 ```yaml
 # Settings:
 battery_switch_delay_minutes: 1 min  # TE KORT!
@@ -353,7 +353,7 @@ Verhoog switch delay:
 battery_switch_delay_minutes: 10-15 min
 ```
 
-#### **Oorzaak 4: Wisselvallig Weer**
+#### **Oorzaak 4: wisselvallig weer**
 ```yaml
 # Situatie: Wolken passeren om de 2-3 minuten
 # P1 wisselt: -800W → +200W → -900W → +150W
@@ -373,9 +373,9 @@ battery_switch_delay_minutes: 15 min        # Lange cooldown
 
 ---
 
-## ⚠️ Configuratie Problemen
+## ⚠️ Configuratie problemen
 
-### ❌ PROBLEEM: Entities Not Found na Installatie
+### ❌ PROBLEEM: entities not found na installatie
 
 **Symptoom:**
 - Na restart: Veel "Entity not found" errors
@@ -436,7 +436,7 @@ Settings → System → Logs → Filter "yaml" of "configuration"
 
 ---
 
-### ❌ PROBLEEM: Template Sensor Errors
+### ❌ PROBLEEM: template sensor errors
 
 **Symptoom:**
 - `sensor.battery_emptiest` of `sensor.battery_fullest` = "unknown"
@@ -487,21 +487,21 @@ sensor.battery_a_soc  # Anders!
 
 ---
 
-### ❌ PROBLEEM: Night Mode Werkt Niet
+### ❌ PROBLEEM: night mode werkt niet
 
 **Symptoom:**
 - Om 01:00: Rotatie blijft actief (zou UIT moeten gaan)
 - Om 07:00: Fase A wordt niet actief
 - Night charging en rotatie interfereren
 
-#### **Diagnose Stap 1: Check Automations Enabled**
+#### **Diagnose stap 1: check automations enabled**
 ```yaml
 Settings → Automations → Zoek:
 - "Marstek: Disable Rotation at Night" → Moet ENABLED zijn ✅
 - "Marstek: Enable Rotation at Day" → Moet ENABLED zijn ✅
 ```
 
-#### **Diagnose Stap 2: Check Tijd Configuratie**
+#### **Diagnose stap 2: check tijd configuratie**
 ```yaml
 Developer Tools → States
 input_datetime.night_mode_start_time: "01:00:00"  # Correct format?
@@ -515,7 +515,7 @@ input_datetime.day_mode_start_time: "07:00:00"    # Correct format?
 **Oplossing:**
 Settings → Helpers → Zoek datetime helpers → Set correct tijd in HH:MM formaat
 
-#### **Diagnose Stap 3: Check Automation Traces**
+#### **Diagnose stap 3: check automation traces**
 ```yaml
 Settings → Automations → "Marstek: Disable Rotation at Night" → Traces
 # Heeft deze getriggerd om 01:00?
@@ -528,7 +528,7 @@ Settings → Automations → "Marstek: Disable Rotation at Night" → Traces
 - Tijd format verkeerd
 - Condition blokkeert (als je er een hebt toegevoegd)
 
-#### **Diagnose Stap 4: Handmatig Testen**
+#### **Diagnose stap 4: handmatig testen**
 ```yaml
 # Force trigger night mode NU:
 Developer Tools → Services
@@ -542,16 +542,16 @@ input_boolean.battery_rotation_enabled → Moet OFF zijn
 
 ---
 
-## 🔋 Batterij Specifieke Problemen
+## 🔋 Batterij specifieke problemen
 
-### ❌ PROBLEEM: Batterij Reageert Niet op Mode Switch
+### ❌ PROBLEEM: batterij reageert niet op mode switch
 
 **Symptoom:**
 - Button press succesvol, maar batterij blijft in oude mode
 - Mode switch duurt >30 seconden
 - Batterij display toont geen wijziging
 
-#### **Diagnose Stap 1: Check Batterij Status**
+#### **Diagnose stap 1: check batterij status**
 ```yaml
 # Check batterij reachability:
 Settings → Devices & Services → Marstek Local API
@@ -564,7 +564,7 @@ Settings → Devices & Services → Marstek Local API
 - WiFi verbinding verbroken
 - Local API disabled
 
-#### **Diagnose Stap 2: Ping Batterij**
+#### **Diagnose stap 2: ping batterij**
 ```bash
 # Windows CMD / PowerShell:
 ping 192.168.6.80    # Fase A
@@ -581,7 +581,7 @@ ping 192.168.6.144   # Fase C
 3. Reboot batterij (power cycle)
 4. Check router: Is batterij verbonden?
 
-#### **Diagnose Stap 3: Test API Direct**
+#### **Diagnose stap 3: test API direct**
 ```bash
 # Windows PowerShell (zorg dat je in de juiste map zit):
 cd C:\Dev\marstekAPI\tests\api
@@ -599,7 +599,7 @@ python apiTest.py
 **Oplossing:**
 Enable Local API via BLE command 0x28 (zie docs/ARCHITECTURE.md voor details)
 
-#### **Diagnose Stap 4: Check Mode Mismatch**
+#### **Diagnose stap 4: check mode mismatch**
 ```yaml
 # Scenario: Je drukt Auto, maar batterij blijft Manual
 # Mogelijke oorzaak: Batterij BMS in beschermingsmodus
@@ -619,7 +619,7 @@ sensor.marstek_venuse_d828_state_of_charge: 98%  # TE HOOG!
 
 ---
 
-### ❌ PROBLEEM: Batterij SOC Sensor "Unknown"
+### ❌ PROBLEEM: batterij SOC sensor "Unknown"
 
 **Symptoom:**
 - `sensor.marstek_venuse_*_state_of_charge` = "unknown" of "unavailable"
@@ -658,9 +658,9 @@ sensor.marstek_venuse_state_of_charge              # Fase C
 
 ---
 
-## 📡 Netwerk & Communicatie Problemen
+## 📡 Netwerk & communicatie problemen
 
-### ❌ PROBLEEM: P1 Meter Data "Unknown"
+### ❌ PROBLEEM: P1 meter data "Unknown"
 
 **Symptoom:**
 - `sensor.p1_meter_power` = "unknown"
@@ -698,7 +698,7 @@ Developer Tools → States → Zoek "power"
 
 ---
 
-### ❌ PROBLEEM: "Connection Timeout" Errors
+### ❌ PROBLEEM: "Connection timeout" errors
 
 **Symptoom:**
 - Logs vol met "Connection timeout to 192.168.6.x"
@@ -733,9 +733,9 @@ ping 192.168.6.80 -n 100
 
 ---
 
-## 🐛 Software & Integratie Problemen
+## 🐛 Software & integratie problemen
 
-### ❌ PROBLEEM: "Invalid Slug" Error bij Package
+### ❌ PROBLEEM: "Invalid slug" error bij package
 
 **Symptoom:**
 ```
@@ -760,7 +760,7 @@ Developer Tools → YAML → Restart
 
 ---
 
-### ❌ PROBLEEM: Automations Verdwijnen na Restart
+### ❌ PROBLEEM: automations verdwijnen na restart
 
 **Symptoom:**
 - Automation working, restart HA → automation weg
@@ -787,7 +787,7 @@ Volg INSTALLATION.md Optie 2 en verplaats automations naar automations.yaml.
 
 ---
 
-### ❌ PROBLEEM: Template Sensor Update Vertraging
+### ❌ PROBLEEM: template sensor update vertraging
 
 **Symptoom:**
 - Battery SOC wijzigt, maar `sensor.battery_emptiest` update pas na 5+ minuten
@@ -820,9 +820,9 @@ Verlaag Marstek Local API scan interval:
 
 ---
 
-## 🎛️ Dashboard Problemen
+## 🎛️ Dashboard problemen
 
-### ❌ PROBLEEM: Gauge Charts Tonen Geen Data
+### ❌ PROBLEEM: gauge charts tonen geen data
 
 **Symptoom:**
 - Dashboard battery gauges leeg of "Unknown"
@@ -876,7 +876,7 @@ sensor.battery_status: "Charging"  # String, niet getal!
 
 ---
 
-### ❌ PROBLEEM: DateTime Picker Te Breed
+### ❌ PROBLEEM: DateTime picker te breed
 
 **Symptoom:**
 - `input_datetime.last_battery_switch` picker komt uit card
@@ -897,9 +897,9 @@ Zie dashboards/battery-rotation-card.yaml voor correcte implementatie.
 
 ---
 
-## 🧪 Testing & Debugging
+## 🧪 Testing & debugging
 
-### Tool 1: Manual Trigger Test
+### Tool 1: manual trigger test
 
 Test automation zonder te wachten op conditions:
 
@@ -917,7 +917,7 @@ data:
 3. Zijn er errors in logs?
 ```
 
-### Tool 2: Template Testing
+### Tool 2: template testing
 
 Test template logic realtime:
 
@@ -938,7 +938,7 @@ Leegste: {{ (valid | sort(attribute='soc') | first).name if valid else 'none' }}
 Leegste: fase_c  # Correct!
 ```
 
-### Tool 3: Automation Trace Analysis
+### Tool 3: automation trace analysis
 
 Diepgaande analyse van automation gedrag:
 
@@ -957,7 +957,7 @@ Settings → Automations → [Select automation] → Traces → [Select trace]
 - Trace count: Hoeveel runs in history?
 ```
 
-### Tool 4: Entity History
+### Tool 4: entity history
 
 Visualiseer entity wijzigingen over tijd:
 
@@ -971,7 +971,7 @@ Developer Tools → States → [Select entity] → History tab
 - Mode changes (switchen batterijen correct?)
 ```
 
-### Tool 5: Log Filtering
+### Tool 5: log filtering
 
 Vind relevante logs snel:
 
@@ -992,9 +992,9 @@ Settings → System → Logs
 
 ---
 
-## 🆘 Emergency Procedures
+## 🆘 Emergency procedures
 
-### 🛑 Emergency Stop
+### 🛑 Emergency stop
 
 **Wanneer gebruiken:**
 - System out of control (te veel switches)
@@ -1032,7 +1032,7 @@ target:
 
 ---
 
-### 🔄 Volledig Reset
+### 🔄 Volledig reset
 
 **Wanneer gebruiken:**
 - Systeem compleet fout geconfigureerd
@@ -1094,9 +1094,9 @@ target:
 
 ---
 
-## 📞 Getting Help
+## 📞 Getting help
 
-### Before Reporting Issue
+### Before reporting issue
 
 1. ✅ Check deze troubleshooting guide
 2. ✅ Check CONFIGURATION.md voor parameter uitleg
@@ -1105,7 +1105,7 @@ target:
 5. ✅ Test met manual trigger
 6. ✅ Verify alle entities bestaan
 
-### Reporting Issue
+### Reporting issue
 
 Open issue op GitHub met:
 
@@ -1150,7 +1150,7 @@ input_boolean.battery_rotation_enabled: on
 
 ---
 
-## 📚 Zie Ook
+## 📚 Zie ook
 
 - **[CONFIGURATION.md](CONFIGURATION.md)** - Parameter uitleg en tuning
 - **[INSTALLATION.md](INSTALLATION.md)** - Installatie instructies

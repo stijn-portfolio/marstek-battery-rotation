@@ -1,4 +1,4 @@
-# 🔋 Marstek Battery Rotation System
+# 🔋 Marstek battery rotation system
 
 **Intelligente batterij rotatie voor Home Assistant op basis van P1 meter metingen**
 
@@ -59,11 +59,11 @@ Alle instellingen aanpasbaar zonder YAML te editen:
 
 ---
 
-## ⚠️ Belangrijk: MQTT Poller (aanbevolen)
+## ⚠️ Belangrijk: MQTT poller (aanbevolen)
 
 De standaard Marstek Local API integratie heeft **timeout problemen** op veel batterijen. Wij bieden een **lightweight MQTT poller** die alleen de werkende API method (`ES.GetMode`) gebruikt.
 
-### Waarom MQTT Poller?
+### Waarom MQTT poller?
 | Aspect | HA Integratie | MQTT Poller |
 |--------|:-------------:|:-----------:|
 | ES.GetStatus | ❌ Timeout | N/A |
@@ -77,9 +77,9 @@ De standaard Marstek Local API integratie heeft **timeout problemen** op veel ba
 
 ## 🚀 Quick start
 
-### Optie A: met MQTT Poller (aanbevolen)
+### Optie a: met MQTT poller (aanbevolen)
 
-#### 1. Installeer MQTT Poller
+#### 1. Installeer MQTT poller
 ```bash
 cd poller
 sudo ./install.sh
@@ -89,9 +89,9 @@ sudo systemctl restart marstek-poller
 
 #### 2. Ga verder met stap 2 hieronder
 
-### Optie B: met HA integratie (als het werkt)
+### Optie b: met HA integratie (als het werkt)
 
-#### 1. Installeer Marstek Local API
+#### 1. Installeer Marstek local API
 Volg de instructies op: https://github.com/jaapp/ha-marstek-local-api
 
 **Let op:** Test eerst of `ES.GetStatus` werkt op jouw batterijen!
@@ -272,7 +272,7 @@ Zie [CHANGELOG.md](CHANGELOG.md) voor volledige versie geschiedenis.
 
 ---
 
-## 🐛 Issues & Support
+## 🐛 Issues & support
 
 Problemen gevonden? [Open een issue](https://github.com/SDBeu/marstek-battery-rotation/issues)
 
@@ -292,7 +292,7 @@ MIT License - zie [LICENSE](LICENSE) voor details.
 
 ---
 
-## ⭐ Star History
+## ⭐ Star history
 
 Als dit project je helpt, geef het een ⭐ op GitHub!
 

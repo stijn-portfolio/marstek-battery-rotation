@@ -1,10 +1,10 @@
-# 🏗️ Architecture & Technical Design
+# 🏗️ Architecture & technical design
 
 Technische documentatie over hoe het Marstek Battery Rotation systeem werkt.
 
 ---
 
-## 📐 System Overview
+## 📐 System overview
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -54,9 +54,9 @@ Technische documentatie over hoe het Marstek Battery Rotation systeem werkt.
 
 ---
 
-## 🔄 System Components
+## 🔄 System components
 
-### 1. Template Sensors
+### 1. Template sensors
 
 Template sensors berekenen dynamisch welke batterij leeg/vol is.
 
@@ -141,18 +141,18 @@ else:
 
 ---
 
-### 2. Input Helpers
+### 2. Input helpers
 
 Input helpers zijn configureerbare parameters die via UI kunnen worden aangepast.
 
-#### Boolean Helpers
+#### Boolean helpers
 
 **`input_boolean.battery_rotation_enabled`**
 - **Doel:** Master enable/disable switch
 - **Effect:** Alle automations checken deze voordat ze triggeren
 - **Default:** OFF (veilig, manual enable vereist)
 
-#### Number Helpers
+#### Number helpers
 
 | Helper | Type | Bereik | Default | Eenheid |
 |--------|------|--------|---------|---------|
@@ -169,7 +169,7 @@ Input helpers zijn configureerbare parameters die via UI kunnen worden aangepast
 - Delays: `mdi:timer-outline`
 - SOC: `mdi:battery-outline`
 
-#### DateTime Helpers
+#### DateTime helpers
 
 **`input_datetime.night_mode_start_time`**
 - **Format:** HH:MM (24-hour)
@@ -186,7 +186,7 @@ Input helpers zijn configureerbare parameters die via UI kunnen worden aangepast
 - **Purpose:** Track laatste switch tijd voor switch delay check
 - **Icon:** `mdi:clock-outline`
 
-#### Text Helpers
+#### Text helpers
 
 **`input_text.active_battery_fase`**
 - **Options:** fase_a, fase_b, fase_c
@@ -197,7 +197,7 @@ Input helpers zijn configureerbare parameters die via UI kunnen worden aangepast
 
 ### 3. Automations
 
-#### 3.1 Morning Battery A Start
+#### 3.1 morning battery a start
 
 **Trigger:**
 ```yaml
@@ -250,7 +250,7 @@ Done ✅
 
 ---
 
-#### 3.2 Solar Excess - Switch to Emptiest
+#### 3.2 solar excess - switch to emptiest
 
 **Trigger:**
 ```yaml
@@ -331,7 +331,7 @@ T=2:21  ACTION COMPLETE
 
 ---
 
-#### 3.3 Grid Consumption - Switch to Fullest
+#### 3.3 grid consumption - switch to fullest
 
 **Trigger:**
 ```yaml
@@ -371,7 +371,7 @@ T=2:21  ACTION COMPLETE
 
 ---
 
-#### 3.4 Disable Rotation at Night
+#### 3.4 disable rotation at night
 
 **Trigger:**
 ```yaml
@@ -395,7 +395,7 @@ T=2:21  ACTION COMPLETE
 
 ---
 
-#### 3.5 Enable Rotation at Day
+#### 3.5 enable rotation at day
 
 **Trigger:**
 ```yaml
@@ -506,9 +506,9 @@ Dashboard biedt visualisatie en manuele controle.
 
 ---
 
-## 🔁 Decision Flow
+## 🔁 Decision flow
 
-### Solar Excess Scenario
+### Solar excess scenario
 
 ```
 ☀️ Solar Panels: 4500W
@@ -565,7 +565,7 @@ Result:
 
 ---
 
-### Grid Consumption Scenario
+### Grid consumption scenario
 
 ```
 ☁️ Solar Panels: 0W (bewolkt)
@@ -595,9 +595,9 @@ Result:
 
 ---
 
-## ⏱️ Timing & Delays
+## ⏱️ Timing & delays
 
-### Multi-Layer Anti-Flapping
+### Multi-Layer anti-Flapping
 
 **Layer 1: Hysteresis Drempels**
 ```
@@ -646,9 +646,9 @@ Result: GEEN switch! (Waterkoker te kort, delay voorkomt)
 
 ---
 
-## 🔐 Safety Mechanisms
+## 🔐 Safety mechanisms
 
-### 1. SOC Limieten
+### 1. SOC limieten
 
 **Min SOC Discharge (15% default):**
 ```yaml
@@ -677,7 +677,7 @@ Example:
   Fase C: 30% → ✅ Selecteerbaar voor laden
 ```
 
-### 2. Switch Order (Critical!)
+### 2. Switch order (Critical!)
 
 **OLD WRONG ORDER (vóór fix):**
 ```yaml
@@ -714,7 +714,7 @@ Reason:
   - Total: ~5 sec buffer
 ```
 
-### 3. Night Mode Protection
+### 3. Night mode protection
 
 **Purpose:** Voorkom conflict met night charging automation
 
@@ -744,7 +744,7 @@ Reason:
 - Day start: A actief (vol voor ontlading)
 - Solar excess: C actief (leeg voor laden)
 
-### 4. Entity Validation
+### 4. Entity validation
 
 **Template Sensor Validation:**
 ```yaml
@@ -771,9 +771,9 @@ Effect:
 
 ---
 
-## 📡 Communication Layer
+## 📡 Communication layer
 
-### Marstek Local API Integration
+### Marstek local API integration
 
 **Protocol:** UDP JSON-RPC
 **Port:** 30000
@@ -843,7 +843,7 @@ Response:
 
 ---
 
-### P1 Meter Integration
+### P1 meter integration
 
 **Protocol:** DSMR (Dutch Smart Meter Requirements)
 **Interface:** USB Serial
@@ -870,9 +870,9 @@ sensor.p1_meter_power:
 
 ---
 
-## 🧮 Template Logic Deep Dive
+## 🧮 Template logic deep dive
 
-### Battery Selection Algorithm
+### Battery selection algorithm
 
 **Pseudo-code:**
 ```python
@@ -952,7 +952,7 @@ return "fase_a"  # Deterministic: alfabetische volgorde bij tie
 
 ---
 
-### Trigger Delay Logic (last_changed Workaround)
+### Trigger delay logic (last_changed workaround)
 
 **Problem:** Home Assistant `for:` parameter doesn't support templates
 
@@ -1011,9 +1011,9 @@ elapsed = as_timestamp(now) - as_timestamp(last_changed)
 
 ---
 
-## 🎯 Performance Optimization
+## 🎯 Performance optimization
 
-### Template Sensor Update Frequency
+### Template sensor update frequency
 
 **Current:** Updates wanneer dependency wijzigt (reactive)
 
@@ -1032,7 +1032,7 @@ template:
 
 ---
 
-### Automation Parallelization
+### Automation parallelization
 
 **Current:** Sequential button presses na nieuwe batterij actief
 
@@ -1053,7 +1053,7 @@ template:
 
 ---
 
-## 📊 Data Flow Diagram
+## 📊 Data flow diagram
 
 ```
 ┌──────────────┐
@@ -1127,9 +1127,9 @@ template:
 
 ---
 
-## 🔬 Testing Architecture
+## 🔬 Testing architecture
 
-### Unit Tests
+### Unit tests
 
 **Location:** `tests/api/`
 
@@ -1148,7 +1148,7 @@ template:
 - Error handling (timeout, invalid response)
 ```
 
-### Integration Tests
+### Integration tests
 
 **Location:** `tests/battery/`
 
@@ -1168,7 +1168,7 @@ template:
 - API integration functional
 ```
 
-### Entity Verification
+### Entity verification
 
 **Location:** `tests/verify-entities.py`
 
@@ -1190,9 +1190,9 @@ template:
 
 ---
 
-## 🔮 Future Architecture Considerations
+## 🔮 Future architecture considerations
 
-### Planned Enhancements
+### Planned enhancements
 
 **1. Dynamic Power Allocation**
 ```yaml

@@ -1,4 +1,4 @@
-# Intelligent Night Charging Feature
+# Intelligent night charging feature
 
 > **Status**: Gepland
 > **Datum**: November 2024
@@ -7,7 +7,7 @@
 
 Automatisch laden tijdens nachtmodus (goedkoop tarief) om een gewenste totale capaciteit te bereiken bij dagstart.
 
-## Voorbeeld Scenario
+## Voorbeeld scenario
 
 ```
 Gewenste capaciteit bij dagstart: 10 kWh
@@ -20,9 +20,9 @@ Doelbatterij:                      Leegste batterij
 
 ---
 
-## Marstek API Capabilities
+## Marstek API capabilities
 
-### Beschikbare Modes
+### Beschikbare modes
 
 | Mode | Functie | Laadt van net? |
 |------|---------|----------------|
@@ -31,7 +31,7 @@ Doelbatterij:                      Leegste batterij
 | **Manual** | Met schema's en power limits | Ja (met schema) |
 | **Passive** | Direct power control met duratie | Ja |
 
-### Cruciale Services
+### Cruciale services
 
 #### 1. `marstek_local_api.set_manual_schedule`
 
@@ -71,7 +71,7 @@ data:
   device_id: "abc123"
 ```
 
-### Power Conventie
+### Power conventie
 
 - **Negatief = LADEN** (bijv. -2000 = laden met 2000W)
 - **Positief = ONTLADEN** (bijv. 800 = ontladen met 800W)
@@ -79,9 +79,9 @@ data:
 
 ---
 
-## Implementatie Plan
+## Implementatie plan
 
-### Stap 1: Input Helpers Toevoegen
+### Stap 1: input helpers toevoegen
 
 ```yaml
 input_number:
@@ -95,7 +95,7 @@ input_number:
     icon: mdi:battery-charging-high
 ```
 
-### Stap 2: Template Sensors Toevoegen
+### Stap 2: template sensors toevoegen
 
 ```yaml
 template:
@@ -144,7 +144,7 @@ template:
         icon: mdi:flash
 ```
 
-### Stap 3: Nachtmodus Automation Aanpassen
+### Stap 3: nachtmodus automation aanpassen
 
 ```yaml
 automation:
@@ -207,7 +207,7 @@ automation:
             Batterij: {{ emptiest }}
 ```
 
-### Stap 4: Dagmodus Automation Aanpassen
+### Stap 4: dagmodus automation aanpassen
 
 ```yaml
 automation:
@@ -245,7 +245,7 @@ automation:
       # ... rest van dagmodus logic
 ```
 
-### Stap 5: Dashboard Uitbreiden
+### Stap 5: dashboard uitbreiden
 
 ```yaml
 # In Instellingen sectie toevoegen:
@@ -263,21 +263,21 @@ automation:
 
 ---
 
-## Risico's & Overwegingen
+## Risico's & overwegingen
 
 ### Technisch
 - Max laadvermogen per batterij: ~2500W
 - Als deficit te groot voor nachturen → maximaal vermogen gebruiken
 - Batterij kan vol raken voor einde nacht
 
-### Mogelijke Uitbreidingen
+### Mogelijke uitbreidingen
 1. **Rotatie tijdens nacht**: Als leegste batterij vol → switch naar volgende
 2. **Dynamisch tarief**: Integratie met energieprijzen API
 3. **Weersverwachting**: Minder laden als veel zon verwacht
 
 ---
 
-## Device IDs Mapping
+## Device IDs mapping
 
 > **TODO**: Vul de echte device IDs in
 
@@ -294,7 +294,7 @@ Om device IDs te vinden:
 
 ---
 
-## Checklist Implementatie
+## Checklist implementatie
 
 - [ ] Input helper toevoegen
 - [ ] Template sensors toevoegen

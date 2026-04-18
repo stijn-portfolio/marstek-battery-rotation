@@ -1,6 +1,6 @@
-# Home Assistant MQTT Setup Instructies
+# Home Assistant MQTT setup instructies
 
-## Probleem Gevonden
+## Probleem gevonden
 
 MQTT broker geeft error code 5: **"Niet geautoriseerd"**
 
@@ -8,16 +8,16 @@ Dit betekent dat de Mosquitto broker authenticatie vereist, maar we hebben geen 
 
 ---
 
-## Oplossing: MQTT Gebruiker Aanmaken
+## Oplossing: MQTT gebruiker aanmaken
 
-### Stap 1: Ga naar Mosquitto Add-on Settings
+### Stap 1: ga naar Mosquitto add-on settings
 
 1. Open Home Assistant: http://homeassistant.local:8123
 2. Ga naar **Settings** > **Add-ons**
 3. Klik op **Mosquitto broker**
 4. Klik op tabblad **Configuration**
 
-### Stap 2: Gebruiker Aanmaken
+### Stap 2: gebruiker aanmaken
 
 Scroll naar beneden naar de sectie **"Logins"**
 
@@ -37,7 +37,7 @@ logins:
 - Kies een sterk wachtwoord
 - Onthoud deze credentials (je hebt ze nodig voor de Python scripts)
 
-### Stap 3: Save & Restart
+### Stap 3: save & restart
 
 1. Klik op **SAVE** (rechtsboven)
 2. Ga naar tabblad **Info**
@@ -47,7 +47,7 @@ Wacht ~10 seconden tot de broker weer draait.
 
 ---
 
-## Alternatief: Home Assistant User Gebruiken
+## Alternatief: Home Assistant user gebruiken
 
 Als je al een Home Assistant user hebt, kun je die ook gebruiken:
 
@@ -61,7 +61,7 @@ Als je al een Home Assistant user hebt, kun je die ook gebruiken:
 
 ---
 
-## Stap 4: Update Python Script
+## Stap 4: update Python script
 
 Na het aanmaken van de MQTT user, update het `mqtt_test.py` script:
 
@@ -74,7 +74,7 @@ MQTT_PASSWORD = "jouw_wachtwoord_hier"
 
 ---
 
-## Stap 5: Test Opnieuw
+## Stap 5: test opnieuw
 
 Run het test script opnieuw:
 

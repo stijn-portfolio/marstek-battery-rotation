@@ -1,10 +1,10 @@
-# ⚙️ Configuratie Handleiding
+# ⚙️ Configuratie handleiding
 
 Uitgebreide uitleg van alle configureerbare parameters in het Marstek Battery Rotation systeem.
 
 ---
 
-## 📍 Waar Vind Je de Instellingen?
+## 📍 Waar vind je de instellingen?
 
 **Home Assistant → Instellingen → Apparaten en diensten → Helpers**
 
@@ -15,7 +15,7 @@ Onderaan het Battery Rotation dashboard card staat de "Instellingen" sectie met 
 
 ---
 
-## 🎛️ Alle Configureerbare Parameters
+## 🎛️ Alle configureerbare parameters
 
 ### 1. Switch Hysteresis - Zon (`input_number.battery_switch_hysteresis_solar`)
 
@@ -23,10 +23,10 @@ Onderaan het Battery Rotation dashboard card staat de "Instellingen" sectie met 
 **Bereik:** 100W - 3000W
 **Eenheid:** Watt (W)
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Minimale teruglevering (negatief vermogen op P1 meter) voordat het systeem overweegt om te switchen naar de leegste batterij.
 
-#### Technische Werking
+#### Technische werking
 ```yaml
 trigger:
   - platform: numeric_state
@@ -40,7 +40,7 @@ condition:
          (states('input_number.battery_switch_hysteresis_solar')|float(500) * -1) }}
 ```
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Stabiel Weer (Default: 500W)**
 - Zonnepanelen leveren constant 2000W
@@ -63,7 +63,7 @@ condition:
 - ✅ Trigger: -300W < -200W → Switch naar leegste batterij
 - **Effect:** Maakt gebruik van elke kleine hoeveelheid zonoverschot
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -73,7 +73,7 @@ condition:
 | Grote PV installatie (>10kWp) | 1000-1500W | Hogere drempel past bij grotere fluctuaties |
 | Kleine PV installatie (<3kWp) | 200-400W | Lagere drempel om alle zon te benutten |
 
-#### Gevolgen van Instelling
+#### Gevolgen van instelling
 
 **Te Laag (< 200W):**
 - ⚠️ Veel switches bij kleine fluctuaties
@@ -93,10 +93,10 @@ condition:
 **Bereik:** 50W - 2000W
 **Eenheid:** Watt (W)
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Minimale netverbruik (positief vermogen op P1 meter) voordat het systeem overweegt om te switchen naar de volste batterij.
 
-#### Technische Werking
+#### Technische werking
 ```yaml
 trigger:
   - platform: numeric_state
@@ -110,7 +110,7 @@ condition:
          states('input_number.battery_switch_hysteresis_grid')|float(200) }}
 ```
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Normale Dag (Default: 200W)**
 - Zonnepanelen: 0W (bewolkt)
@@ -138,7 +138,7 @@ condition:
 - ✅ Trigger: +80W > +50W → Switch naar volste batterij
 - **Effect:** Maximale self-consumption, minimaal grid verbruik
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -148,7 +148,7 @@ condition:
 | Night charging actief | 0W (of systeem UIT) | Laat night charging automation het overnemen |
 | Grote verbruikers (airco, etc) | 1000-1500W | Switch alleen voor grote apparaten |
 
-#### Gevolgen van Instelling
+#### Gevolgen van instelling
 
 **Te Laag (< 100W):**
 - ⚠️ Veel switches bij kleine verbruiksschommelingen
@@ -170,10 +170,10 @@ condition:
 **Bereik:** 0.5 - 10 minuten
 **Eenheid:** Minuten
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Hoe lang de teruglevering (zonoverschot) moet aanhouden BOVEN de hysteresis drempel voordat er wordt geswitcht naar de leegste batterij.
 
-#### Technische Werking
+#### Technische werking
 ```yaml
 condition:
   - condition: template
@@ -185,7 +185,7 @@ condition:
 
 **Belangrijk:** Home Assistant `for:` parameter ondersteunt geen templates, dus we gebruiken `last_changed` attribute check.
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Waterkoker (2000W, 3 minuten)**
 - T=0min: Waterkoker start → P1: -2500W (zonoverschot door PV 4500W - verbruik 2000W)
@@ -217,7 +217,7 @@ condition:
 - Delay van 5 min betekent: teruglevering moet 5 min stabiel blijven
 - **Effect:** Alleen switchen bij echt stabiele zonoverschot periodes
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -228,7 +228,7 @@ condition:
 | Zomer (veel zon) | 1-2 min | Snelle reactie, zon blijft toch lang |
 | Lente/herfst (wisselvallig) | 3-5 min | Voorkom flapping |
 
-#### Gevolgen van Instelling
+#### Gevolgen van instelling
 
 **Te Kort (< 1 min):**
 - ⚠️ Te veel switches bij korte zonnige periodes
@@ -248,10 +248,10 @@ condition:
 **Bereik:** 0.5 - 10 minuten
 **Eenheid:** Minuten
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Hoe lang het netverbruik moet aanhouden BOVEN de hysteresis drempel voordat er wordt geswitcht naar de volste batterij.
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Wasmachine (400W, 90 minuten)**
 - T=0min: Wasmachine start → P1: +600W
@@ -281,7 +281,7 @@ Hoe lang het netverbruik moet aanhouden BOVEN de hysteresis drempel voordat er w
 - T=2min-3uur: Batterij levert 2500W
 - **Resultaat:** Perfecte use case voor batterij ontlading
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -291,7 +291,7 @@ Hoe lang het netverbruik moet aanhouden BOVEN de hysteresis drempel voordat er w
 | Test fase | 0.5-1 min | Snelle feedback |
 | Airco/verwarming | 1-2 min | Deze draaien lang, snelle reactie gewenst |
 
-#### Gevolgen van Instelling
+#### Gevolgen van instelling
 
 **Te Kort (< 1 min):**
 - ⚠️ Switch voor korte verbruikers (waterkoker, etc)
@@ -311,10 +311,10 @@ Hoe lang het netverbruik moet aanhouden BOVEN de hysteresis drempel voordat er w
 **Bereik:** 1 - 30 minuten
 **Eenheid:** Minuten
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Minimale tijd die moet verstrijken tussen twee batterij switches. Anti-flapping bescherming.
 
-#### Technische Werking
+#### Technische werking
 ```yaml
 condition:
   - condition: template
@@ -324,7 +324,7 @@ condition:
       {{ (as_timestamp(now()) - as_timestamp(last_switch)) / 60 >= delay_min }}
 ```
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Zon → Verbruik → Zon (Wisselvallig)**
 - T=10:00: Zonoverschot → Switch naar leegste batterij (Fase B, 30%)
@@ -358,7 +358,7 @@ condition:
 - **Risico:** Meer switches, meer slijtage
 - **Voordeel:** Optimale batterij benutting
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -369,7 +369,7 @@ condition:
 | Batterij levensduur maximaliseren | 15-30 min | Minimaliseer aantal switches |
 | Optimale efficiency | 3-5 min | Snelle aanpassing aan situatie |
 
-#### Gevolgen van Instelling
+#### Gevolgen van instelling
 
 **Te Kort (< 3 min):**
 - ⚠️ Veel batterij switches
@@ -392,10 +392,10 @@ condition:
 **Bereik:** 5% - 50%
 **Eenheid:** Procent (%)
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Voorkomt dat een batterij geselecteerd wordt voor ontlading (grid consumption) als de SOC onder deze waarde zit.
 
-#### Technische Werking
+#### Technische werking
 ```yaml
 # In sensor.battery_fullest template
 {% set batteries = [
@@ -408,7 +408,7 @@ Voorkomt dat een batterij geselecteerd wordt voor ontlading (grid consumption) a
 {{ (valid_batteries | sort(attribute='soc', reverse=true) | first).name if valid_batteries else 'none' }}
 ```
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Normale Situatie (Default 15%)**
 - Fase A: 80% SOC → ✅ Beschikbaar voor ontlading
@@ -438,7 +438,7 @@ Voorkomt dat een batterij geselecteerd wordt voor ontlading (grid consumption) a
 - **Effect:** 2-3x langere levensduur
 - **Nadeel:** 30% capaciteit ongebruikt
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -448,7 +448,7 @@ Voorkomt dat een batterij geselecteerd wordt voor ontlading (grid consumption) a
 | Nood situaties (stroomuitval) | 20-30% | Houd reserve voor nood |
 | Test fase | 20% | Extra veiligheid tijdens testen |
 
-#### Gevolgen van Instelling
+#### Gevolgen van instelling
 
 **Te Laag (< 10%):**
 - ⚠️ Risico op BMS cut-off
@@ -462,7 +462,7 @@ Voorkomt dat een batterij geselecteerd wordt voor ontlading (grid consumption) a
 - ✅ Maximale levensduur
 - ✅ Reserve voor noodsituaties
 
-#### Relatie met SOC Sensors
+#### Relatie met SOC sensors
 ```yaml
 # Check huidige SOC waardes:
 sensor.marstek_venuse_d828_state_of_charge         # Fase A
@@ -478,10 +478,10 @@ sensor.marstek_venuse_state_of_charge              # Fase C
 **Bereik:** 50% - 100%
 **Eenheid:** Procent (%)
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Voorkomt dat een batterij geselecteerd wordt voor laden (solar excess) als de SOC boven deze waarde zit.
 
-#### Technische Werking
+#### Technische werking
 ```yaml
 # In sensor.battery_emptiest template
 {% set batteries = [...] %}
@@ -490,7 +490,7 @@ Voorkomt dat een batterij geselecteerd wordt voor laden (solar excess) als de SO
 {{ (valid_batteries | sort(attribute='soc') | first).name if valid_batteries else 'none' }}
 ```
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Normale Situatie (Default 90%)**
 - Fase A: 92% SOC → ❌ Te vol, niet selecteerbaar voor laden
@@ -519,7 +519,7 @@ Voorkomt dat een batterij geselecteerd wordt voor laden (solar excess) als de SO
 - Max SOC = 100%
 - **Risico:** Verhoogde slijtage bij frequent vol laden
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -530,7 +530,7 @@ Voorkomt dat een batterij geselecteerd wordt voor laden (solar excess) als de SO
 | Winter (weinig zon) | 95-100% | Elke kWh telt |
 | Voor lang weekend weg | 100% | Maximale buffer |
 
-#### Gevolgen van Instelling
+#### Gevolgen van instelling
 
 **Te Laag (< 80%):**
 - ⚠️ 20-30% capaciteit ongebruikt
@@ -544,7 +544,7 @@ Voorkomt dat een batterij geselecteerd wordt voor laden (solar excess) als de SO
 - ✅ Maximale capaciteit benutting
 - ✅ Meer energie beschikbaar
 
-#### BMS Balancing
+#### BMS balancing
 **Belangrijk:** Batterijen hebben BMS balancing nodig!
 - BMS balanceert cellen bij ~95-100% SOC
 - Aanbeveling: Elke 1-2 weken volledig laden (100%)
@@ -562,10 +562,10 @@ Voorkomt dat een batterij geselecteerd wordt voor laden (solar excess) als de SO
 **Default:** 01:00
 **Format:** HH:MM (24-uur)
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Tijdstip waarop het batterij rotatie systeem automatisch wordt uitgeschakeld om conflict met night charging automations te voorkomen.
 
-#### Technische Werking
+#### Technische werking
 ```yaml
 - id: marstek_disable_rotation_at_night
   alias: "Marstek: Disable Rotation at Night"
@@ -578,7 +578,7 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt uitgeschakeld om 
         entity_id: input_boolean.battery_rotation_enabled
 ```
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Nachttarief 23:00-07:00 (Pas aan naar 23:00)**
 - Je nachttarief: 23:00-07:00
@@ -625,7 +625,7 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt uitgeschakeld om 
       time: "{{ states('sensor.cheapest_hour_today') }}"
   ```
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -635,7 +635,7 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt uitgeschakeld om 
 | Variabel tarief | Dynamisch | Automation aanpassen |
 | Geen nachttarief | 01:00 (of disable night mode) | Niet relevant, maar safe |
 
-#### Relatie met Night Charging
+#### Relatie met night charging
 
 **Typische Night Charging Setup:**
 ```yaml
@@ -668,10 +668,10 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt uitgeschakeld om 
 **Default:** 07:00
 **Format:** HH:MM (24-uur)
 
-#### Wat Doet Dit?
+#### Wat doet dit?
 Tijdstip waarop het batterij rotatie systeem automatisch wordt ingeschakeld en Fase A wordt geactiveerd.
 
-#### Technische Werking
+#### Technische werking
 ```yaml
 - id: marstek_morning_battery_a_start
   alias: "Marstek: Morning Battery A Start"
@@ -698,7 +698,7 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt ingeschakeld en F
           - button.fasec_geen_deb8_manual_mode
 ```
 
-#### Praktische Voorbeelden
+#### Praktische voorbeelden
 
 **Scenario 1: Nachttarief 01:00-07:00 (Default)**
 - Night charging: 01:00-07:00
@@ -759,7 +759,7 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt ingeschakeld en F
         }}
   ```
 
-#### Wanneer Aanpassen?
+#### Wanneer aanpassen?
 
 | Situatie | Aanbevolen Waarde | Reden |
 |----------|-------------------|-------|
@@ -769,7 +769,7 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt ingeschakeld en F
 | Thuiswerken | 06:00 | Vroeg klaar voor verbruik |
 | Weekend anders | Conditional | Ma-vr: 07:00, Za-zo: 08:00 |
 
-#### Relatie met Night Charging
+#### Relatie met night charging
 
 **Typische Timeline:**
 ```
@@ -785,7 +785,7 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt ingeschakeld en F
         → Klaar voor ontlading
 ```
 
-#### Gevolgen van Instelling
+#### Gevolgen van instelling
 
 **Te Vroeg (< 06:00):**
 - ⚠️ Mogelijk conflict met night charging (als die nog bezig is)
@@ -799,9 +799,9 @@ Tijdstip waarop het batterij rotatie systeem automatisch wordt ingeschakeld en F
 
 ---
 
-## 🎯 Aanbevolen Configuraties per Scenario
+## 🎯 Aanbevolen configuraties per scenario
 
-### Scenario 1: Normale Situatie (Default)
+### Scenario 1: normale situatie (Default)
 ```yaml
 battery_switch_hysteresis_solar: 500W
 battery_switch_hysteresis_grid: 200W
@@ -822,7 +822,7 @@ day_mode_start_time: "07:00"
 
 ---
 
-### Scenario 2: Maximale Batterij Levensduur
+### Scenario 2: maximale batterij levensduur
 ```yaml
 battery_switch_hysteresis_solar: 800W
 battery_switch_hysteresis_grid: 500W
@@ -847,7 +847,7 @@ day_mode_start_time: "07:00"
 
 ---
 
-### Scenario 3: Maximale Efficiency (Wisselvallig Weer)
+### Scenario 3: maximale efficiency (Wisselvallig weer)
 ```yaml
 battery_switch_hysteresis_solar: 1000W
 battery_switch_hysteresis_grid: 500W
@@ -872,7 +872,7 @@ day_mode_start_time: "07:00"
 
 ---
 
-### Scenario 4: Maximale Capaciteit Benutting (Zomer)
+### Scenario 4: maximale capaciteit benutting (Zomer)
 ```yaml
 battery_switch_hysteresis_solar: 300W
 battery_switch_hysteresis_grid: 100W
@@ -902,7 +902,7 @@ day_mode_start_time: "07:00"
 
 ---
 
-### Scenario 5: Grote PV Installatie (>10kWp)
+### Scenario 5: grote PV installatie (>10kWp)
 ```yaml
 battery_switch_hysteresis_solar: 1500W
 battery_switch_hysteresis_grid: 800W
@@ -922,7 +922,7 @@ day_mode_start_time: "07:00"
 
 ---
 
-### Scenario 6: Kleine PV Installatie (<3kWp)
+### Scenario 6: kleine PV installatie (<3kWp)
 ```yaml
 battery_switch_hysteresis_solar: 200W
 battery_switch_hysteresis_grid: 100W
@@ -942,7 +942,7 @@ day_mode_start_time: "07:00"
 
 ---
 
-### Scenario 7: Nachttarief 23:00-07:00
+### Scenario 7: nachttarief 23:00-07:00
 ```yaml
 # ... andere settings normaal ...
 night_mode_start_time: "22:45"  # Start VOOR night charging!
@@ -955,7 +955,7 @@ day_mode_start_time: "07:00"
 
 ---
 
-### Scenario 8: Variabel Tarief (Nordpool/Tibber)
+### Scenario 8: variabel tarief (Nordpool/Tibber)
 ```yaml
 # ... andere settings normaal ...
 # Gebruik automation om tijden dynamisch aan te passen!
@@ -982,11 +982,11 @@ day_mode_start_time: "07:00"
 
 ---
 
-## 🧪 Test Procedure na Aanpassing
+## 🧪 Test procedure na aanpassing
 
 Na het wijzigen van configuratie, volg deze test procedure:
 
-### Stap 1: Monitor Gedrag (24 uur)
+### Stap 1: monitor gedrag (24 uur)
 **Check:**
 - Aantal switches per dag (Developer Tools → Logbook)
 - P1 power tijdens switches (geen grid consumption spike)
@@ -1002,7 +1002,7 @@ Na het wijzigen van configuratie, volg deze test procedure:
 - Grid consumption tijdens switches → Bug! (zou niet moeten)
 - Batterijen buiten SOC limieten → Check template sensors
 
-### Stap 2: Check Edge Cases
+### Stap 2: check edge cases
 **Test:**
 1. Waterkoker (2000W, 3 min) → Zou NIET mogen triggeren
 2. Wasmachine (400W, 90 min) → Zou WEL mogen triggeren
@@ -1010,7 +1010,7 @@ Na het wijzigen van configuratie, volg deze test procedure:
 4. Alle batterijen vol → sensor.battery_emptiest = "none"
 5. Alle batterijen leeg → sensor.battery_fullest = "none"
 
-### Stap 3: Fine-Tuning
+### Stap 3: fine-Tuning
 **Te veel switches?**
 - Verhoog trigger delays (+1 min)
 - Verhoog switch delay (+5 min)
@@ -1026,7 +1026,7 @@ Na het wijzigen van configuratie, volg deze test procedure:
 
 ---
 
-## 📊 Dashboard Monitoring
+## 📊 Dashboard monitoring
 
 Voeg deze sensors toe aan je dashboard voor monitoring:
 
@@ -1071,7 +1071,7 @@ entities:
 
 ---
 
-## 🔍 Troubleshooting Configuration Issues
+## 🔍 Troubleshooting configuration issues
 
 ### Issue 1: "Te veel switches"
 **Symptoom:** 20+ switches per dag
@@ -1123,7 +1123,7 @@ entities:
 
 ---
 
-## 📚 Gerelateerde Documentatie
+## 📚 Gerelateerde documentatie
 
 - **[INSTALLATION.md](INSTALLATION.md)** - Installatie instructies
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Veelvoorkomende problemen

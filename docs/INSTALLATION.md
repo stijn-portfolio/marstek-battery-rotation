@@ -1,12 +1,12 @@
-# 🔋 Marstek Batterij Rotatie - Installatie voor jouw setup
+# 🔋 Marstek batterij rotatie - installatie voor jouw setup
 
 Je hebt **2 opties**. Optie 1 is het makkelijkst!
 
 ---
 
-## ✅ OPTIE 1: Packages (AANBEVOLEN - 5 minuten)
+## ✅ OPTIE 1: packages (AANBEVOLEN - 5 minuten)
 
-### Stap 1: Pas configuration.yaml aan
+### Stap 1: pas configuration.yaml aan
 
 Voeg deze regel toe aan het **einde** van je `configuration.yaml`:
 
@@ -27,7 +27,7 @@ cp /config/configuration.yaml /config/configuration.yaml.backup
 cp configuration_with_packages.yaml /config/configuration.yaml
 ```
 
-### Stap 2: Kopieer de batterij rotatie configuratie
+### Stap 2: kopieer de batterij rotatie configuratie
 
 ```bash
 # Maak packages folder aan
@@ -37,13 +37,13 @@ mkdir -p /config/packages
 cp ha-marstek-battery-rotation.yaml /config/packages/marstek_battery_rotation.yaml
 ```
 
-### Stap 3: Check & Restart
+### Stap 3: check & restart
 
 1. **Developer Tools → YAML → Check Configuration**
 2. Zou moeten zeggen: "Configuration valid!"
 3. **Developer Tools → YAML → Restart**
 
-### Stap 4: Verify na restart
+### Stap 4: verify na restart
 
 Ga naar **Developer Tools → States** en zoek naar:
 - ✅ `sensor.battery_emptiest`
@@ -54,11 +54,11 @@ Als deze bestaan → **SUCCESS!** Ga naar "Eerste Test" hieronder.
 
 ---
 
-## 🔧 OPTIE 2: Split Configuratie (15 minuten, complexer)
+## 🔧 OPTIE 2: split configuratie (15 minuten, complexer)
 
 Als je liever geen packages gebruikt, moet je de configuratie handmatig splitsen.
 
-### Stap 1: Pas configuration.yaml aan
+### Stap 1: pas configuration.yaml aan
 
 Voeg deze regels toe:
 
@@ -100,7 +100,7 @@ input_datetime: !include input_datetime.yaml
 input_boolean: !include input_boolean.yaml
 ```
 
-### Stap 2: Maak de nieuwe files
+### Stap 2: maak de nieuwe files
 
 Ik ga de configuratie voor je splitsen. Run dit script:
 
@@ -109,11 +109,11 @@ cd /config
 python3 /path/to/split_config.py
 ```
 
-### Stap 3: Voeg automations toe
+### Stap 3: voeg automations toe
 
 Open `automations.yaml` en voeg de 3 automations toe (zie ha-marstek-battery-rotation.yaml regels 155-402).
 
-### Stap 4: Voeg scripts toe
+### Stap 4: voeg scripts toe
 
 Open `scripts.yaml` en voeg de 5 scripts toe (zie ha-marstek-battery-rotation.yaml regels 407-511).
 
@@ -121,7 +121,7 @@ Open `scripts.yaml` en voeg de 5 scripts toe (zie ha-marstek-battery-rotation.ya
 
 ## 🧪 EERSTE TEST (Na installatie)
 
-### Test 1: Check entities
+### Test 1: check entities
 
 **Developer Tools → Template:**
 ```jinja2
@@ -132,7 +132,7 @@ Systeem: {{ states('input_boolean.battery_rotation_enabled') }}
 
 Moet geldige waardes geven (niet "unknown").
 
-### Test 2: Test script - Activeer Fase A
+### Test 2: test script - activeer fase a
 
 **Developer Tools → Services:**
 ```yaml
@@ -144,7 +144,7 @@ service: script.marstek_activate_fase_a
 2. Fase B & C buttons → Manual mode
 3. Geen errors in logs
 
-### Test 3: Test script - Emergency Stop
+### Test 3: test script - emergency stop
 
 **Developer Tools → Services:**
 ```yaml
@@ -154,7 +154,7 @@ service: script.marstek_all_batteries_manual
 **Check:**
 Alle 3 batterijen → Manual mode
 
-### Test 4: Check automations
+### Test 4: check automations
 
 Ga naar **Instellingen → Automations & Scenes**
 
@@ -173,7 +173,7 @@ Je moet zien:
 2. Zoek **"Batterij Rotatie Systeem"**
 3. Toggle **ON** ✅
 
-### Of via Developer Tools:
+### Of via developer tools:
 
 ```yaml
 service: input_boolean.turn_on
@@ -185,7 +185,7 @@ target:
 
 ## 📊 MONITORING
 
-### Dashboard Card (Optioneel)
+### Dashboard card (Optioneel)
 
 Voeg dit toe aan je dashboard voor live monitoring:
 

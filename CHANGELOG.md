@@ -11,7 +11,7 @@ en dit project volgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Toegevoegd
 
-#### Core Functionaliteit
+#### Core functionaliteit
 - ✨ Intelligente batterij rotatie systeem voor 3 Marstek Venus E batterijen
 - ✨ Automatische batterij selectie op basis van P1 meter metingen
 - ✨ Template sensors voor leegste en volste batterij detectie
@@ -26,12 +26,12 @@ en dit project volgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ✨ Configureerbare switch delay (minimale tijd tussen switches)
 - ✨ Emergency stop toggle (battery_rotation_enabled)
 
-#### Night/Day Mode
+#### Night/Day mode
 - ✨ Automatische nachtmodus (01:00-07:00 default, configureerbaar)
 - ✨ Automatische dagmodus (07:00 start, Fase A actief)
 - ✨ Integratie met bestaande night charging automations
 
-#### Safety Features
+#### Safety features
 - ✨ Anti-flapping bescherming (hysteresis + delays)
 - ✨ SOC limieten (15% min ontladen, 90% max laden)
 - ✨ Minimum 5 minuten tussen switches
@@ -62,7 +62,7 @@ en dit project volgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Gewijzigd
 
-#### Kritische Fixes
+#### Kritische fixes
 - 🔧 **Switch volgorde omgedraaid** - Nieuwe batterij wordt nu EERST geactiveerd voordat oude worden gedeactiveerd
   - Elimineert gap tijdens switches (voorheen 30+ seconden netverbruik)
   - Nieuwe volgorde: Activeer nieuwe → Wacht 5 sec → Deactiveer oude
@@ -80,14 +80,14 @@ en dit project volgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - 🔧 Default trigger delays ingesteld op 2 minuten
 - 🔧 Folder structuur georganiseerd voor GitHub
 
-### Technische Details
+### Technische details
 
-#### Entity Names
+#### Entity names
 - Fase A (schuin - d828): `button.fasea_schuin_d828_*`
 - Fase B (plat - 9a7d): `button.faseb_plat_v3_9a7d_*`
 - Fase C (geen - deb8): `button.fasec_geen_deb8_*`
 
-#### Default Waarden
+#### Default waarden
 - Hysteresis Zon: 500W
 - Hysteresis Net: 200W
 - Trigger Delay Zon: 2 min
@@ -98,7 +98,7 @@ en dit project volgt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Nachtmodus Start: 01:00
 - Dagmodus Start: 07:00
 
-#### Folder Structuur
+#### Folder structuur
 ```
 marstekAPI/
 ├── config/
@@ -126,20 +126,20 @@ marstekAPI/
 └── LICENSE
 ```
 
-### Bekende Issues
+### Bekende issues
 - Geen bekende issues in v1.0.0
 
-### Breaking Changes
+### Breaking changes
 - Geen - dit is de eerste release
 
-### Upgrade Instructies
+### Upgrade instructies
 - N/A - eerste release
 
 ---
 
 ## [Unreleased]
 
-### Geplande Features (zie ROADMAP.md)
+### Geplande features (zie ROADMAP.md)
 - MQTT Bridge voor multi-batterij monitoring
 - Dynamic power allocation
 - Weersvoorspelling integratie
@@ -148,7 +148,7 @@ marstekAPI/
 
 ---
 
-## Versie Geschiedenis
+## Versie geschiedenis
 
 **[1.0.0]** - 2024-11-20
 - Eerste stabiele release met volledige batterij rotatie functionaliteit
