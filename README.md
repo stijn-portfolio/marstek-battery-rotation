@@ -13,9 +13,9 @@ Automatisch wisselen tussen 3 Marstek Venus E batterijen om:
 
 ## 📸 Dashboard
 
-![Marstek Battery Rotation Dashboard](dashboard.png)
+![Marstek Battery Rotation Dashboard](docs/images/dashboard.png)
 
-![Energy Overview](dashboard-energy.png)
+![Energy Overview](docs/images/dashboard-energy.png)
 
 ## ✨ Features
 
